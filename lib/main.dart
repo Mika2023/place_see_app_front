@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:place_see_app/core/auth/auth_state.dart';
+import 'package:place_see_app/features/auth/screen/login_screen.dart';
+import 'package:place_see_app/features/auth/service/auth_service.dart';
+import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
+import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
+import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
+import 'package:place_see_app/features/onboarding/screen/onboarding_screen.dart';
+import 'package:place_see_app/core/local_storage/app_settings.dart';
+import 'package:place_see_app/core/local_storage/token_storage.dart';
+import 'package:place_see_app/core/network/dio_client.dart';
+import 'package:place_see_app/ui/theme/theme.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
+
   runApp(const MyApp());
 }
 
@@ -9,58 +27,68 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return MultiProvider(providers: [
+        ChangeNotifierProvider(create:
+          (_) => AuthState(),
+        ),
+
+        Provider(create:
+          (_) => AppSettings(Hive.box('settings'))
+        ),
+
+        Provider(create:
+          (_) => TokenStorage()
+        ),
+
+        ProxyProvider2<AuthState, TokenStorage, DioClient>(update:
+          (_, authState, tokenStorage, _) =>
+              DioClient(tokenStorage, authState),
+        ),
+
+        ProxyProvider2<DioClient, AuthState, AuthService>(update:
+            (_, dioClient, authState, _) =>
+            AuthService(dioClient.dio, context.read<TokenStorage>(), authState),
+        ),
+
+        ChangeNotifierProvider(create:
+          (_) => LoginViewModel(context.read<AuthService>()),
+        ),
+
+        ChangeNotifierProvider(create:
+          (_) => RegistrationViewModel(context.read<AuthService>()),
+        )
+      ],
+      child: const AppRoot(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class AppRoot extends StatelessWidget {
+  const AppRoot({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    final authState = context.watch<AuthState>();
+    final appSettings = context.read<AppSettings>();
+
+    return MaterialApp(
+      theme: appTheme,
+      debugShowCheckedModeBanner: false,
+      home: () {
+        if (!appSettings.getIsOnboardingCompleted()) {
+          return const OnboardingScreen();
+        }
+
+        switch (authState.value) {
+          case AuthEnum.unauthenticated:
+            return const LoginScreen();
+          case AuthEnum.authenticated:
+            return const CategoriesScreen();
+          case AuthEnum.unknown:
+            return const LoginScreen();
+        }
+      } (),
     );
   }
 }
+

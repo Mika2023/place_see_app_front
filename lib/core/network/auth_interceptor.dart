@@ -1,23 +1,22 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
 
 class AuthInterceptor extends Interceptor {
   final Dio dio;
   final TokenStorage tokenStorage;
+  final AuthState authState;
 
   bool _isRefreshing = false;
   final List<Completer<void>> _refreshQueue = [];
 
-  AuthInterceptor({required this.dio, required this.tokenStorage,});
+  AuthInterceptor({required this.dio, required this.tokenStorage, required this.authState,});
 
   ///Подставляет в каждый запрос в хэдеры токен доступа
   @override
-  Future<void> onRequest(
-        RequestOptions options,
-        RequestInterceptorHandler handler
-      ) async {
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final accessToken = await tokenStorage.getAccessToken();
 
     if (accessToken != null) {
@@ -42,6 +41,7 @@ class AuthInterceptor extends Interceptor {
       handler.resolve(response);
     } catch (e) {
       await tokenStorage.clear();
+      authState.setUnauthenticated();
       handler.next(err);
     }
   }
@@ -68,6 +68,10 @@ class AuthInterceptor extends Interceptor {
         data: {'refreshToken': refreshToken},
         options: Options(headers: {'Authorization': null})
       );
+
+      if (response.statusCode == 403 || response.statusCode == 401) {
+        throw Exception('Токен обновления доступа истек или отсутсвует');
+      }
 
       final newAccessToken = response.data['accessToken'];
       final newRefreshToken = response.data['refreshToken'];
