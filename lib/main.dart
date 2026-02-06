@@ -10,6 +10,8 @@ import 'package:place_see_app/features/onboarding/screen/onboarding_screen.dart'
 import 'package:place_see_app/core/local_storage/app_settings.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
 import 'package:place_see_app/core/network/dio_client.dart';
+import 'package:place_see_app/features/onboarding/service/onboarding_service.dart';
+import 'package:place_see_app/features/onboarding/view_model/onboarding_view_model.dart';
 import 'package:place_see_app/ui/theme/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -45,18 +47,25 @@ class MyApp extends StatelessWidget {
               DioClient(tokenStorage, authState),
         ),
 
-        ProxyProvider2<DioClient, AuthState, AuthService>(update:
-            (_, dioClient, authState, _) =>
-            AuthService(dioClient.dio, context.read<TokenStorage>(), authState),
+        ProxyProvider3<DioClient, AuthState, TokenStorage, AuthService>(update:
+            (_, dioClient, authState, tokenStorage, _) =>
+            AuthService(dioClient.dio, tokenStorage, authState),
         ),
 
-        ChangeNotifierProvider(create:
-          (_) => LoginViewModel(context.read<AuthService>()),
+        ProxyProvider<AppSettings, OnboardingService>(update:
+            (_, appSettings, _) =>
+            OnboardingService(appSettings),
         ),
 
-        ChangeNotifierProvider(create:
-          (_) => RegistrationViewModel(context.read<AuthService>()),
-        )
+        ChangeNotifierProxyProvider<OnboardingService, OnboardingViewModel>(
+          create: (_) => OnboardingViewModel(),
+          update: (_, onboardingService, previous) {
+            previous!.updateService(onboardingService);
+            return previous;
+          },
+        ),
+
+
       ],
       child: const AppRoot(),
     );
@@ -85,7 +94,7 @@ class AppRoot extends StatelessWidget {
           case AuthEnum.authenticated:
             return const CategoriesScreen();
           case AuthEnum.unknown:
-            return const LoginScreen();
+            return const OnboardingScreen();
         }
       } (),
     );

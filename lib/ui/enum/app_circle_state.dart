@@ -1,0 +1,4 @@
+enum AppCircleState {
+  normal,
+  error,
+}

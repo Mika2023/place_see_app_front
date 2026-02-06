@@ -12,7 +12,34 @@ final appTheme = ThemeData(
     headlineLarge: AppTypography.heading1Dark,
     headlineMedium: AppTypography.heading2Dark,
     headlineSmall: AppTypography.chapterHeadingDark,
+    bodyLarge: AppTypography.bodyLargeDark,
     bodyMedium: AppTypography.bodyDark,
-    bodySmall: AppTypography.subTextDark
+    bodySmall: AppTypography.subTextDark,
+    labelMedium: AppTypography.subTextDark
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      minimumSize: const Size(double.infinity, 58),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(29),
+      ),
+      textStyle: AppTypography.buttonTextDark,
+      elevation: 0,
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      padding: EdgeInsets.zero,
+      textStyle: AppTypography.buttonTextDark,
+    )
+  ),
+  inputDecorationTheme: InputDecorationThemeData(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 29, vertical: 16),
+    hintStyle: AppTypography.hintText,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(29),
+      borderSide: const BorderSide(color: AppColors.secondary, width: 2),
+    ),
+    isDense: true,
   ),
 );

@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 
 class AppSettings {
-  static const _onboardingName = 'User has completed onboarding';
+  static const _onboardingName = 'completed_onboarding';
   final Box settingsBox;
 
   AppSettings(this.settingsBox);

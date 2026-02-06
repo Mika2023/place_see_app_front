@@ -35,6 +35,13 @@ class AppTypography {
     color: AppColors.primary,
   );
 
+  static const bodyLargeDark = TextStyle(
+    fontFamily: 'NT Somic',
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+    color: AppColors.secondary,
+  );
+
   static const bodyDark = TextStyle(
     fontFamily: 'NT Somic',
     fontSize: 20,
@@ -103,5 +110,12 @@ class AppTypography {
     fontSize: 16,
     fontWeight: FontWeight.normal,
     color: AppColors.additionalTwo,
+  );
+
+  static const hintText = TextStyle(
+    fontFamily: 'NT Somic',
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: AppColors.disabledDark,
   );
 }
