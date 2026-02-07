@@ -27,6 +27,10 @@ class AppInputWidget extends StatelessWidget {
       style: _textStyleByState(context),
       decoration: InputDecoration(
         hintText: hint,
+        constraints: const BoxConstraints(
+          minHeight: 58,
+          maxHeight: 58,
+        ),
         border: Theme
             .of(context)
             .inputDecorationTheme

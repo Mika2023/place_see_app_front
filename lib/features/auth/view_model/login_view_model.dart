@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:place_see_app/features/auth/screen/registration_screen.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
 import 'package:place_see_app/ui/enum/app_circle_state.dart';
 import 'package:place_see_app/ui/enum/app_input_state.dart';
+import 'package:place_see_app/ui/navigator/navigator_service.dart';
 
 class LoginViewModel extends ChangeNotifier{
-  final AuthService authService;
+  AuthService? authService;
+  NavigatorService? navigatorService;
 
   String nickname = '';
   String password = '';
@@ -16,7 +19,11 @@ class LoginViewModel extends ChangeNotifier{
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
 
-  LoginViewModel(this.authService);
+  void updateLoginVm(AuthService service, NavigatorService navigation) {
+    authService = service;
+    navigatorService = navigation;
+    notifyListeners();
+  }
 
   AppButtonState get buttonState => _currentState;
   AppInputState get fieldState => _currentFieldsState;
@@ -50,7 +57,7 @@ class LoginViewModel extends ChangeNotifier{
     notifyListeners();
 
     try {
-      await authService.login(nickname, password);
+      await authService?.login(nickname, password);
       _handleSuccess();
     } catch(e) {
       error = e.toString();
@@ -58,6 +65,10 @@ class LoginViewModel extends ChangeNotifier{
     } finally {
       notifyListeners();
     }
+  }
+
+  void goToRegistrationPage() {
+    navigatorService?.pushReplacement(const RegistrationScreen());
   }
 
   void _handleSuccess() {

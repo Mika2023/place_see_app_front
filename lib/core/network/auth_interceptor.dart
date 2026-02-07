@@ -33,6 +33,7 @@ class AuthInterceptor extends Interceptor {
 
     if (!isUnauthorizedEx || isAuthRequest) {
       handler.next(err);
+      return;
     }
 
     try {

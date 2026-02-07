@@ -1,5 +1,7 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppConfig {
-  static const String backendBaseUrl = String.fromEnvironment('BACKEND_BASE_URL');
-  static const int connectTimeoutSeconds = 10;
-  static const int receiveTimeoutSeconds = 10;
+  static final String backendBaseUrl = dotenv.env['BACKEND_BASE_URL']!;
+  static const int connectTimeoutSeconds = 20;
+  static const int receiveTimeoutSeconds = 20;
 }

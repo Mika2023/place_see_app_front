@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:place_see_app/features/auth/screen/login_screen.dart';
+import 'package:place_see_app/ui/navigator/navigator_service.dart';
 import '../../../ui/enum/app_button_state.dart';
 import '../../../ui/enum/app_circle_state.dart';
 import '../../../ui/enum/app_input_state.dart';
 import '../service/auth_service.dart';
 
 class RegistrationViewModel extends ChangeNotifier{
-  final AuthService authService;
+  AuthService? authService;
+  NavigatorService? navigatorService;
 
   String email = '';
   String password = '';
@@ -17,7 +21,11 @@ class RegistrationViewModel extends ChangeNotifier{
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
 
-  RegistrationViewModel(this.authService);
+  void updateRegistrationVM(AuthService service, NavigatorService navigation) {
+    authService = service;
+    navigatorService = navigation;
+    notifyListeners();
+  }
 
   AppButtonState get buttonState => _currentState;
   AppInputState get fieldState => _currentFieldsState;
@@ -56,14 +64,23 @@ class RegistrationViewModel extends ChangeNotifier{
     notifyListeners();
 
     try {
-      await authService.register(nickname, email, password);
+      await authService?.register(nickname, email, password);
       _handleSuccess();
     } catch (e) {
       error = e.toString();
+
+      if (kDebugMode) {
+        print(error);
+      }
+
       _handleError();
     } finally {
       notifyListeners();
     }
+  }
+
+  void goToLoginPage() {
+    navigatorService?.pushReplacement(const LoginScreen());
   }
 
   void _handleSuccess() {
@@ -74,8 +91,9 @@ class RegistrationViewModel extends ChangeNotifier{
   }
 
   void _handleError() {
+    _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = error!;
+    _textOnNavigateLink = "Данные введены некорректно!";
   }
 }
