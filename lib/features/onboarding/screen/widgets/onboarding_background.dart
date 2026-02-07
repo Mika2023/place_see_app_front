@@ -8,19 +8,21 @@ class OnboardingBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: const [
-        Positioned(
-          left: 200,
-          top: 67,
-          child: CustomCircle(),
-        ),
-        Positioned(
-          left: -77,
-          top: 406,
-          child: CustomCircle(state: AppCircleState.error,),
-        ),
-      ],
+    return SizedBox.expand(
+      child: Stack(
+        children: const [
+          Positioned(
+            left: 200,
+            top: 67,
+            child: CustomCircle(),
+          ),
+          Positioned(
+            left: -77,
+            top: 406,
+            child: CustomCircle(state: AppCircleState.error,),
+          ),
+        ],
+      ),
     );
   }
 }

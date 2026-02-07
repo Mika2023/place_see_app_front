@@ -36,10 +36,9 @@ class CustomCircle extends StatelessWidget {
               colors: [
                 color.withValues(alpha: 1.0),
                 color.withValues(alpha: 0.8),
-                color.withValues(alpha: 0.3),
                 color.withValues(alpha: 0.0),
               ],
-              stops: const [0.0, 0.8, 0.9, 1.0],
+              stops: const [0.0, 0.9, 1.0],
             ),
           ),
         ),

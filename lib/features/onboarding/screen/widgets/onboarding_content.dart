@@ -18,23 +18,18 @@ class OnboardingContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const SizedBox(height: 120,),
 
-              Flexible(
-                child: Text(
-                  'Находите\nкрасоту\nв городе',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+              Text(
+                'Находите\nкрасоту\nв городе',
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
 
               const SizedBox(height: 24,),
 
-              Flexible(
-                child: Text(
-                  'Откройте для себя самые\nфотогеничные уголки',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+              Text(
+                'Откройте для себя самые\nфотогеничные уголки',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
 
               const Spacer(),
@@ -45,10 +40,10 @@ class OnboardingContent extends StatelessWidget {
                 buttonStyle: AppButtonStyle.dark,
               ),
 
-              const SizedBox(height: 32,),
+              const SizedBox(height: 45,),
             ],
           ),
-        )
+        ),
     );
   }
 }

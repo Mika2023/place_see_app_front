@@ -10,6 +10,7 @@ class OnboardingScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
           OnboardingBackground(),
           OnboardingContent(),

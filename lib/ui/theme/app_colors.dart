@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const primary = Color(0x00fbfbfb);
-  static const secondary = Color(0x00001ADC);
-  static const accentOne = Color(0x00C1FF11);
-  static const accentTwo = Color(0x00FF6438);
-  static const additionalOne = Color(0x00EFF1FB);
-  static const additionalTwo = Color(0x00C9D4FB);
-  static const disabledDark = Color(0x60001ADC);
-  static const disabledLight = Color(0x60C1FF11);
-  static const successGreen = Color(0x008AE500);
-  static const darkRed = Color(0x00FF3700);
+  static const primary = Color(0xfffbfbfb);
+  static const secondary = Color(0xff001ADC);
+  static const accentOne = Color(0xffC1FF11);
+  static const accentTwo = Color(0xffFF6438);
+  static const additionalOne = Color(0xffEFF1FB);
+  static const additionalTwo = Color(0xffC9D4FB);
+  static const disabledDark = Color(0xaa001ADC);
+  static const disabledLight = Color(0xaaC1FF11);
+  static const successGreen = Color(0xff8AE500);
+  static const darkRed = Color(0xffFF3700);
 }
