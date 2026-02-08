@@ -8,6 +8,7 @@ class AppColors {
   static const additionalOne = Color(0xffEFF1FB);
   static const additionalTwo = Color(0xffC9D4FB);
   static const disabledDark = Color(0xaa001ADC);
+  static const hintDark = Color(0x66001adc);
   static const disabledLight = Color(0xaaC1FF11);
   static const successGreen = Color(0xff8AE500);
   static const darkRed = Color(0xffFF3700);

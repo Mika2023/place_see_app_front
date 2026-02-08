@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
+import 'package:place_see_app/core/location/location_service.dart';
+import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/features/auth/screen/login_screen.dart';
 import 'package:place_see_app/features/auth/screen/registration_screen.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
 import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
+import 'package:place_see_app/features/main_screens/user_location/service/user_location_service.dart';
 import 'package:place_see_app/features/onboarding/screen/onboarding_screen.dart';
 import 'package:place_see_app/core/local_storage/app_settings.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
@@ -61,6 +64,14 @@ class MyApp extends StatelessWidget {
             (_) => NavigatorService()
         ),
 
+        Provider(create:
+          (_) => PermissionService()
+        ),
+
+        ProxyProvider<PermissionService, LocationService>(update:
+          (_, permissionService, _) => LocationService(permissionService),
+        ),
+
         ProxyProvider2<AuthState, TokenStorage, DioClient>(update:
           (_, authState, tokenStorage, _) =>
               DioClient(tokenStorage, authState),
@@ -74,6 +85,11 @@ class MyApp extends StatelessWidget {
         ProxyProvider<AppSettings, OnboardingService>(update:
             (_, appSettings, _) =>
             OnboardingService(appSettings),
+        ),
+
+        ProxyProvider3<DioClient, LocationService, PermissionService, UserLocationService>(update:
+          (_, dioClient, locationService, permissionService, _) =>
+            UserLocationService(dioClient.dio, locationService, permissionService),
         ),
 
         ChangeNotifierProxyProvider2<OnboardingService, NavigatorService, OnboardingViewModel>(

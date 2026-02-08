@@ -18,50 +18,53 @@ class LoginContent extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsetsGeometry.symmetric(horizontal: 22),
-        child: Column(
-          children: [
-            const SizedBox(height: 186),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 186),
 
-            Text(
-              'Регистрация',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-
-            const SizedBox(height: 64,),
-
-            AppInputWidget(
-              hint: 'Введите никнейм',
-              state: vm.fieldState,
-              onChanged: vm.updateNicknameField,
-            ),
-
-            const SizedBox(height: 24),
-
-            AppInputWidget(
-              hint: 'Введите пароль',
-              state: vm.fieldState,
-              onChanged: vm.updatePasswordField,
-              obscureText: true,
-            ),
-
-            const SizedBox(height: 45),
-
-            AppButton(
-              textOnButton: vm.textOnLoginButton,
-              onPressed: () => vm.login(),
-              buttonStyle: AppButtonStyle.light,
-              state: vm.buttonState,
-            ),
-
-            const SizedBox(height: 16),
-
-            Center(
-              child: AppTextButton(
-                textOnButton: vm.textOnNavigateLink,
-                onPressed: vm.goToRegistrationPage,
+              Text(
+                'Вход',
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
-            )
-          ],
+
+              const SizedBox(height: 64,),
+
+              AppInputWidget(
+                hint: 'Введите никнейм',
+                state: vm.fieldState,
+                onChanged: vm.updateNicknameField,
+              ),
+
+              const SizedBox(height: 24),
+
+              AppInputWidget(
+                hint: 'Введите пароль',
+                state: vm.fieldState,
+                onChanged: vm.updatePasswordField,
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 45),
+
+              AppButton(
+                textOnButton: vm.textOnLoginButton,
+                onPressed: () => vm.login(),
+                buttonStyle: AppButtonStyle.light,
+                state: vm.buttonState,
+              ),
+
+              const SizedBox(height: 16),
+
+              Center(
+                child: AppTextButton(
+                  textOnButton: vm.textOnNavigateLink,
+                  onPressed: vm.goToRegistrationPage,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

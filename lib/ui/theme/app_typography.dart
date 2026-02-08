@@ -118,6 +118,6 @@ class AppTypography {
     fontFamily: 'NT Somic',
     fontSize: 16,
     fontWeight: FontWeight.normal,
-    color: AppColors.disabledDark,
+    color: AppColors.hintDark,
   );
 }

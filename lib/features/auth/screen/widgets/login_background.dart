@@ -15,8 +15,8 @@ class LoginBackground extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            left: 51,
-            top: -176,
+            left: 67,
+            top: 718,
             child: CustomCircle(state: vm.circleState,),
           ),
         ],
