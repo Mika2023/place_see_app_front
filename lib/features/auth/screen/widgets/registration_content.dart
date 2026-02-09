@@ -68,6 +68,7 @@ class RegistrationContent extends StatelessWidget {
                     Center(
                       child: AppTextButton(
                         textOnButton: vm.textOnNavigateLink,
+                        state: vm.buttonState,
                         onPressed: vm.goToLoginPage,
                       ),
                     )

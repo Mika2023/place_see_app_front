@@ -94,6 +94,6 @@ class RegistrationViewModel extends ChangeNotifier{
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = "Данные введены некорректно!";
+    _textOnNavigateLink = "Пользователь с такой почтой уже существует! Войти в свой аккаунт";
   }
 }

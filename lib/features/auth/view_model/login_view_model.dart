@@ -82,6 +82,6 @@ class LoginViewModel extends ChangeNotifier{
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = error!;
+    _textOnNavigateLink = "Неверно введены никнейм или пароль! Зарегистрироваться";
   }
 }
