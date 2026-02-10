@@ -18,6 +18,7 @@ class RegistrationViewModel extends ChangeNotifier{
   String _textOnRegistrationButton = "Зарегистрироваться";
   String _textOnNavigateLink = "Войти в свой аккаунт";
   AppButtonState _currentState = AppButtonState.disabled;
+  AppButtonState _currentTextButtonState = AppButtonState.enabled;
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
 
@@ -28,6 +29,7 @@ class RegistrationViewModel extends ChangeNotifier{
   }
 
   AppButtonState get buttonState => _currentState;
+  AppButtonState get textButtonState => _currentTextButtonState;
   AppInputState get fieldState => _currentFieldsState;
   AppCircleState get circleState => _currentCircleState;
   String get textOnLoginButton => _textOnRegistrationButton;
@@ -61,6 +63,7 @@ class RegistrationViewModel extends ChangeNotifier{
     if (_currentState != AppButtonState.enabled) return;
 
     _currentState = AppButtonState.loading;
+    _currentTextButtonState = AppButtonState.loading;
     notifyListeners();
 
     try {
@@ -80,20 +83,33 @@ class RegistrationViewModel extends ChangeNotifier{
   }
 
   void goToLoginPage() {
+    _resetState();
     navigatorService?.pushReplacement(const LoginScreen());
+  }
+
+  void _resetState() {
+    _currentCircleState = AppCircleState.normal;
+    _currentFieldsState = AppInputState.normal;
+    _currentState = AppButtonState.disabled;
+    _currentTextButtonState = AppButtonState.enabled;
+    _textOnRegistrationButton = "Зарегистрироваться";
+    _textOnNavigateLink = "Войти в свой аккаунт";
   }
 
   void _handleSuccess() {
     _currentState = AppButtonState.disabled;
     _currentFieldsState = AppInputState.success;
+    _currentTextButtonState = AppButtonState.disabled;
+    _currentCircleState = AppCircleState.normal;
     _textOnRegistrationButton = "Успешно!";
     _textOnNavigateLink = "Загрузка...";
   }
 
   void _handleError() {
+    _currentTextButtonState = AppButtonState.enabled;
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = "Пользователь с такой почтой уже существует! Войти в свой аккаунт";
+    _textOnNavigateLink = "Пользователь с такой почтой уже существует!\nВойти в свой аккаунт";
   }
 }

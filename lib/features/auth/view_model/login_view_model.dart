@@ -18,6 +18,7 @@ class LoginViewModel extends ChangeNotifier{
   AppButtonState _currentState = AppButtonState.disabled;
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
+  AppButtonState _currentTextButtonState = AppButtonState.enabled;
 
   void updateLoginVm(AuthService service, NavigatorService navigation) {
     authService = service;
@@ -26,6 +27,7 @@ class LoginViewModel extends ChangeNotifier{
   }
 
   AppButtonState get buttonState => _currentState;
+  AppButtonState get textButtonState => _currentTextButtonState;
   AppInputState get fieldState => _currentFieldsState;
   AppCircleState get circleState => _currentCircleState;
   String get textOnLoginButton => _textOnLoginButton;
@@ -54,6 +56,7 @@ class LoginViewModel extends ChangeNotifier{
     if (_currentState != AppButtonState.enabled) return;
 
     _currentState = AppButtonState.loading;
+    _currentTextButtonState = AppButtonState.loading;
     notifyListeners();
 
     try {
@@ -68,20 +71,33 @@ class LoginViewModel extends ChangeNotifier{
   }
 
   void goToRegistrationPage() {
+    _resetState();
     navigatorService?.pushReplacement(const RegistrationScreen());
   }
 
+  void _resetState() {
+    _currentTextButtonState = AppButtonState.enabled;
+    _currentCircleState = AppCircleState.normal;
+    _currentFieldsState = AppInputState.normal;
+    _currentState = AppButtonState.disabled;
+    _textOnLoginButton = "Войти";
+    _textOnNavigateLink = "Зарегистрироваться";
+  }
+
   void _handleSuccess() {
+    _currentTextButtonState = AppButtonState.disabled;
     _currentState = AppButtonState.disabled;
     _currentFieldsState = AppInputState.success;
+    _currentCircleState = AppCircleState.normal;
     _textOnLoginButton = "Успешно!";
     _textOnNavigateLink = "Загрузка главного экрана...";
   }
 
   void _handleError() {
+    _currentTextButtonState = AppButtonState.enabled;
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = "Неверно введены никнейм или пароль! Зарегистрироваться";
+    _textOnNavigateLink = "Неверно введены никнейм или пароль!\nЗарегистрироваться";
   }
 }

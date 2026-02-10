@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:dio/dio.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
@@ -17,9 +19,10 @@ class AuthInterceptor extends Interceptor {
   ///Подставляет в каждый запрос в хэдеры токен доступа
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    bool isPublicEndpoint = options.path.contains('/auth');
     final accessToken = await tokenStorage.getAccessToken();
 
-    if (accessToken != null) {
+    if (!isPublicEndpoint && accessToken != null && !JwtDecoder.isExpired(accessToken)) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
 

@@ -27,7 +27,10 @@ class AppTextButton extends StatelessWidget {
             isDisabled ? AppColors.secondary : AppColors.disabledDark
         ),
       ),
-      child: Text(textOnButton),
+      child: Text(
+          textOnButton,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
