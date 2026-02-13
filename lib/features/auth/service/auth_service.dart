@@ -1,45 +1,50 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:place_see_app/core/api/auth_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
 
 class AuthService {
-  final Dio dio;
+  final AuthApi authApi;
   final TokenStorage tokenStorage;
   final AuthState authState;
 
-  AuthService(this.dio, this.tokenStorage, this.authState);
+  AuthService(this.authApi, this.tokenStorage, this.authState);
+
+  Future<void> checkAuth() async {
+    final accessToken = await tokenStorage.getAccessToken();
+    final refreshToken = await tokenStorage.getRefreshToken();
+
+    if (accessToken == null && refreshToken == null) {
+      authState.setUnauthenticated();
+    } else if (accessToken != null && !JwtDecoder.isExpired(accessToken)) {
+      authState.setAuthenticated();
+    } else if (refreshToken != null && !JwtDecoder.isExpired(refreshToken)) {
+      bool success = await _refreshToken(refreshToken);
+      success? authState.setAuthenticated() : authState.setUnauthenticated();
+    } else {
+      authState.setUnauthenticated();
+    }
+  }
 
   Future<void> login(String nickname, String password) async {
-    final response = await dio.post(
-        '/auth/login',
-        data: {
-          'nickname': nickname,
-          'password': password,
-        },
-    );
+    final response = await authApi.login(nickname, password);
 
     await _handleAuthResponse(response);
+    authState.setAuthenticated();
   }
 
   Future<void> register(String nickname, String email, String password) async {
-    final response = await dio.post(
-      '/auth/registration',
-      data: {
-        'nickname': nickname,
-        'email': email,
-        'password': password,
-      },
-    );
+    final response = await authApi.register(nickname, email, password);
 
     await _handleAuthResponse(response);
+    authState.setAfterRegistration();
   }
 
   Future<void> logout() async {
     final refreshToken = await tokenStorage.getRefreshToken();
-    await dio.delete(
-      '/auth/logout',
-      data: {'refreshToken': refreshToken},
-    );
+    await authApi.logout(refreshToken);
     await tokenStorage.clear();
     authState.setUnauthenticated();
   }
@@ -49,6 +54,20 @@ class AuthService {
     final refreshToken = response.data['refreshToken'];
 
     await tokenStorage.saveTokens(accessToken: accessToken, refreshToken: refreshToken);
-    authState.setAuthenticated();
+  }
+
+  Future<bool> _refreshToken(String refreshToken) async {
+    try {
+      final response = await authApi.refresh(refreshToken);
+
+      _handleAuthResponse(response);
+      return true;
+    } catch (ex) {
+      if (kDebugMode) {
+        print(ex.toString());
+      }
+      await tokenStorage.clear();
+      return false;
+    }
   }
 }

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:place_see_app/core/api/auth_api.dart';
+import 'package:place_see_app/core/api/user_location_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
+import 'package:place_see_app/core/auth/auth_state_coordinator.dart';
 import 'package:place_see_app/core/location/location_service.dart';
+import 'package:place_see_app/core/location/location_tracking_manager.dart';
 import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/features/auth/screen/login_screen.dart';
 import 'package:place_see_app/features/auth/screen/registration_screen.dart';
@@ -11,7 +15,9 @@ import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
 import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
+import 'package:place_see_app/features/main_screens/user_location/screen/user_location_screen.dart';
 import 'package:place_see_app/features/main_screens/user_location/service/user_location_service.dart';
+import 'package:place_see_app/features/main_screens/user_location/view_model/user_location_view_model.dart';
 import 'package:place_see_app/features/onboarding/screen/onboarding_screen.dart';
 import 'package:place_see_app/core/local_storage/app_settings.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
@@ -78,19 +84,37 @@ class MyApp extends StatelessWidget {
               DioClient(tokenStorage, authState),
         ),
 
-        ProxyProvider3<DioClient, AuthState, TokenStorage, AuthService>(update:
-            (_, dioClient, authState, tokenStorage, _) =>
-            AuthService(dioClient.dio, tokenStorage, authState),
+        ProxyProvider<DioClient, AuthApi>(update:
+            (_, dioClient, _) => AuthApi(dioClient.dio),
         ),
 
-        ProxyProvider<AppSettings, OnboardingService>(update:
-            (_, appSettings, _) =>
-            OnboardingService(appSettings),
+        ProxyProvider<DioClient, UserLocationApi>(update:
+            (_, dioClient, _) => UserLocationApi(dioClient.dio),
         ),
 
-        ProxyProvider3<DioClient, LocationService, PermissionService, UserLocationService>(update:
-          (_, dioClient, locationService, permissionService, _) =>
-            UserLocationService(dioClient.dio, locationService, permissionService),
+        ProxyProvider2<LocationService, UserLocationApi, LocationTrackingManager>(update:
+            (_, locationService, userLocationApi, _) =>
+            LocationTrackingManager(locationService, userLocationApi),
+        ),
+
+        ProxyProvider3<LocationTrackingManager, AuthState, AppSettings, AuthStateCoordinator>(update:
+            (_, locationTrackingManager, authState, appSettings, _) =>
+            AuthStateCoordinator(authState, locationTrackingManager, appSettings),
+        ),
+
+        ProxyProvider3<AuthApi, AuthState, TokenStorage, AuthService>(update:
+            (_, authApi, authState, tokenStorage, _) =>
+            AuthService(authApi, tokenStorage, authState),
+        ),
+
+        ProxyProvider2<AppSettings, AuthService, OnboardingService>(update:
+            (_, appSettings, authService, _) =>
+            OnboardingService(appSettings, authService),
+        ),
+
+        ProxyProvider2<PermissionService, AppSettings, UserLocationService>(update:
+            (_, permissionService, appSettings, _) =>
+            UserLocationService(permissionService, appSettings),
         ),
 
         ChangeNotifierProxyProvider2<OnboardingService, NavigatorService, OnboardingViewModel>(
@@ -116,6 +140,14 @@ class MyApp extends StatelessWidget {
             return previous;
           },
         ),
+
+        ChangeNotifierProxyProvider2<UserLocationService, AuthState, UserLocationViewModel>(
+          create: (_) => UserLocationViewModel(),
+          update: (_, userLocationService, authState, previous) {
+            previous!.updateService(userLocationService, authState);
+            return previous;
+          },
+        ),
       ],
       child: const AppRoot(),
     );
@@ -128,7 +160,6 @@ class AppRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthState>();
-    final appSettings = context.watch<AppSettings>();
     final navigation = context.read<NavigatorService>();
 
     return MaterialApp(
@@ -140,17 +171,15 @@ class AppRoot extends StatelessWidget {
         extendBodyBehindAppBar: true,
         body: SizedBox.expand(
           child: () {
-            if (!appSettings.getIsOnboardingCompleted()) {
-              return const OnboardingScreen();
-            }
-
             switch (authState.value) {
               case AuthEnum.unauthenticated:
                 return const LoginScreen();
               case AuthEnum.authenticated:
                 return const CategoriesScreen();
               case AuthEnum.unknown:
-                return const RegistrationScreen();
+                return const OnboardingScreen();
+              case AuthEnum.afterRegistration:
+                return const UserLocationScreen();
             }
           } (),
         ),

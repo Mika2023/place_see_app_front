@@ -38,6 +38,7 @@ class OnboardingContent extends StatelessWidget {
                 textOnButton: 'Начать',
                 onPressed: () => vm.endOnboarding(),
                 buttonStyle: AppButtonStyle.dark,
+                state: vm.buttonState,
               ),
 
               const SizedBox(height: 45,),

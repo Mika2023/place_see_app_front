@@ -1,15 +1,15 @@
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 class PermissionService {
 
   Future<bool> checkLocationPermission() async {
-    final status = await Permission.locationWhenInUse.status;
+    final status = await Geolocator.checkPermission();
 
-    if (status.isGranted) {
+    if (status == LocationPermission.always || status == LocationPermission.whileInUse) {
       return true;
-    } else if (status.isDenied) {
-      final result = await Permission.locationWhenInUse.request();
-      return result.isGranted;
+    } else if (status == LocationPermission.denied) {
+      final result = await Geolocator.requestPermission();
+      return result == LocationPermission.always || result == LocationPermission.whileInUse;
     }
 
     return false;

@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 enum AuthEnum {
   authenticated,
   unauthenticated,
-  unknown
+  unknown,
+  afterRegistration,
 }
 
 class AuthState extends ValueNotifier<AuthEnum>{
@@ -11,4 +12,5 @@ class AuthState extends ValueNotifier<AuthEnum>{
 
   void setAuthenticated() => value = AuthEnum.authenticated;
   void setUnauthenticated() => value = AuthEnum.unauthenticated;
+  void setAfterRegistration() => value = AuthEnum.afterRegistration;
 }
