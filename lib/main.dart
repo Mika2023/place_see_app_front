@@ -10,14 +10,13 @@ import 'package:place_see_app/core/location/location_service.dart';
 import 'package:place_see_app/core/location/location_tracking_manager.dart';
 import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/features/auth/screen/login_screen.dart';
-import 'package:place_see_app/features/auth/screen/registration_screen.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
 import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
-import 'package:place_see_app/features/main_screens/user_location/screen/user_location_screen.dart';
-import 'package:place_see_app/features/main_screens/user_location/service/user_location_service.dart';
-import 'package:place_see_app/features/main_screens/user_location/view_model/user_location_view_model.dart';
+import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
+import 'package:place_see_app/features/user_location/service/user_location_service.dart';
+import 'package:place_see_app/features/user_location/view_model/user_location_view_model.dart';
 import 'package:place_see_app/features/onboarding/screen/onboarding_screen.dart';
 import 'package:place_see_app/core/local_storage/app_settings.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
@@ -27,6 +26,8 @@ import 'package:place_see_app/features/onboarding/view_model/onboarding_view_mod
 import 'package:place_see_app/ui/navigator/navigator_service.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/theme/theme.dart';
+import 'package:place_see_app/ui/widget/main_scaffold_with_nav_bar.dart';
+import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -147,6 +148,11 @@ class MyApp extends StatelessWidget {
             previous!.updateService(userLocationService, authState);
             return previous;
           },
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => NavBarProvider(),
+          child: const MainScaffoldWithNavBar(),
         ),
       ],
       child: const AppRoot(),

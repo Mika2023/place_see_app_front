@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
-import 'package:place_see_app/features/main_screens/user_location/service/user_location_service.dart';
+import 'package:place_see_app/features/user_location/service/user_location_service.dart';
 
 import '../../../../ui/enum/app_button_state.dart';
 

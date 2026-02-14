@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:place_see_app/features/main_screens/user_location/screen/widgets/user_location_background.dart';
-import 'package:place_see_app/features/main_screens/user_location/screen/widgets/user_location_content.dart';
+import 'package:place_see_app/features/user_location/screen/widgets/user_location_background.dart';
+import 'package:place_see_app/features/user_location/screen/widgets/user_location_content.dart';
 
 class UserLocationScreen extends StatelessWidget {
   const UserLocationScreen({super.key});

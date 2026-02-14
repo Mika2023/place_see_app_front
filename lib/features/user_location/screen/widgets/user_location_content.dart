@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:place_see_app/features/main_screens/user_location/view_model/user_location_view_model.dart';
+import 'package:place_see_app/features/user_location/view_model/user_location_view_model.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
 import 'package:provider/provider.dart';
 
