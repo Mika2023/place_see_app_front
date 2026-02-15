@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:place_see_app/core/api/auth_api.dart';
+import 'package:place_see_app/core/api/category_api.dart';
 import 'package:place_see_app/core/api/user_location_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/auth/auth_state_coordinator.dart';
@@ -14,6 +15,8 @@ import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
 import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
+import 'package:place_see_app/features/main_screens/categories/service/category_service.dart';
+import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
 import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
 import 'package:place_see_app/features/user_location/service/user_location_service.dart';
 import 'package:place_see_app/features/user_location/view_model/user_location_view_model.dart';
@@ -93,6 +96,14 @@ class MyApp extends StatelessWidget {
             (_, dioClient, _) => UserLocationApi(dioClient.dio),
         ),
 
+        ProxyProvider<DioClient, CategoryApi>(update:
+            (_, dioClient, _) => CategoryApi(dioClient.dio),
+        ),
+
+        ProxyProvider<CategoryApi, CategoryService>(update:
+            (_, categoryApi, _) => CategoryService(categoryApi),
+        ),
+
         ProxyProvider2<LocationService, UserLocationApi, LocationTrackingManager>(update:
             (_, locationService, userLocationApi, _) =>
             LocationTrackingManager(locationService, userLocationApi),
@@ -146,6 +157,14 @@ class MyApp extends StatelessWidget {
           create: (_) => UserLocationViewModel(),
           update: (_, userLocationService, authState, previous) {
             previous!.updateService(userLocationService, authState);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider<CategoryService, CategoriesViewModel>(
+          create: (_) => CategoriesViewModel(),
+          update: (_, categoryService, previous) {
+            previous!.update(categoryService);
             return previous;
           },
         ),
