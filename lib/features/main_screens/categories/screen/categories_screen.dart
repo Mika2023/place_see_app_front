@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
+import 'package:place_see_app/ui/theme/app_colors.dart';
+import 'package:place_see_app/ui/widget/placeholder_with_icon_widget.dart';
 import 'package:place_see_app/ui/widget/category_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../gen/assets.gen.dart';
 
-class CategoriesScreen extends StatelessWidget{
-
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
+
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CategoriesViewModel>().loadCategories();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,59 +31,29 @@ class CategoriesScreen extends StatelessWidget{
 
     if (vm.isLoading) {
       return SafeArea(
-        child: Padding(
-          padding: const EdgeInsetsGeometry.symmetric(horizontal: 22),
-          child: Column(
-            children: [
-              const SizedBox(height: 135),
-
-              Assets.icons.timeClock.svg(
-                width: 150,
-                height: 150,
-              ),
-
-              const SizedBox(height: 40,),
-
-              Text(
-                'Сейчас появятся интересные категории...',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
+        child: PlaceholderWithIconWidget(
+          icon: Assets.icons.timeClock.svg(
+            width: 82,
+            height: 82,
           ),
-        ),
-      );
-    }
-
-    if (vm.categories.isEmpty) {
-      vm.loadCategories();
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsetsGeometry.symmetric(horizontal: 22),
-          child: Column(
-            children: [
-              const SizedBox(height: 135),
-
-              Assets.icons.timeClock.svg(
-                width: 150,
-                height: 150,
-              ),
-
-              const SizedBox(height: 40,),
-
-              Text(
-                'Сейчас появятся интересные категории...',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-          ),
+          text: 'Сейчас появятся интересные категории...',
+          padding: const EdgeInsets.symmetric(horizontal: 22),
         ),
       );
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
-        children: vm.categories.map((cat) => CategoryWidget(category: cat)).toList(),
+        children: [
+          Container(
+            color: vm.categories.isNotEmpty ? vm.categories.first.color : AppColors.primary,
+            child: SafeArea(
+                child: Column(
+                children: vm.categories.map((cat) => CategoryWidget(category: cat)).toList(),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

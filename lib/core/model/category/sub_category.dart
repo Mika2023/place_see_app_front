@@ -1,9 +1,7 @@
-import 'dart:ffi';
-
 class SubCategory {
-  final Long id;
+  final int id;
   final String name;
-  final Long parentId;
+  final int parentId;
   String? imageUrl;
   String? description;
 

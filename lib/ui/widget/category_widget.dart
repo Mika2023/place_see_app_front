@@ -12,6 +12,13 @@ class CategoryWidget extends StatelessWidget {
 
   const CategoryWidget({super.key, required this.category});
 
+  void _onTap(BuildContext context, int id, String name, String? description) {
+    final catShort = CategoryShort(id, name, description);
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) =>
+            PlacesScreen(categoryShort: catShort)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final subCategories = category.children;
@@ -27,74 +34,88 @@ class CategoryWidget extends StatelessWidget {
       cols = 2;
     }
 
-    return ClipPath(
-      clipper: TopCircularBorder(),
-      child: Container(
-        color: category.color,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PressableWidget(
-              onPressed: () {
-                final catShort = CategoryShort(category.id, category.name, category.description);
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => PlacesScreen(categoryShort: catShort)));
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    category.name,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: category.textColor,
-                    ),
-                  ),
+    return Stack(
+      children: [
+        if (category.hasBorder && category.previousColor != null)
+          Positioned.fill(
+              child: Container(color: category.previousColor,)
+          ),
 
-                  if (category.description != null) ...[
-                    const SizedBox(height: 16,),
-                    Text(
-                      category.description!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: category.textColor,
+        ClipPath(
+          clipper: category.hasBorder ? TopCircularBorder() : null,
+          child: Container(
+            color: category.color,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PressableWidget(
+                  onPressed: () => _onTap(context, category.id, category.name, category.description),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (category.hasBorder)
+                        SizedBox(height: 20,),
+
+                      Text(
+                        category.name,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                          color: category.textColor,
+                        ),
                       ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(height: 16,),
 
-            GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: cols,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: aspectRatio,
+                      if (category.description != null) ...[
+                        const SizedBox(height: 12,),
+                        Text(
+                          category.description!,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                            color: category.textColor,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-                itemCount: subCategories.length,
-                itemBuilder: (context, index) {
-                  final subCat = subCategories[index];
+                const SizedBox(height: 16,),
 
-                  double width = (index == 0 && subCategories.length >= 2) ? 2 : 1;
+                GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: cols,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: aspectRatio,
+                    ),
+                    itemCount: subCategories.length,
+                    itemBuilder: (context, index) {
+                      final subCat = subCategories[index];
 
-                  return SubCategoryWidget(
-                      subCategory: subCat,
-                    widthMultiplier: width,
-                    onTap: () {
-                      final catShort = CategoryShort(subCat.id, subCat.name, subCat.description);
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => PlacesScreen(categoryShort: catShort)));
-                    },
-                  );
-                }
-            )
-          ],
+                      double width = (index == 0 && subCategories.length >= 2)
+                          ? 2
+                          : 1;
+
+                      return SubCategoryWidget(
+                        subCategory: subCat,
+                        widthMultiplier: width,
+                        onTap: () => _onTap(context, subCat.id, subCat.name, subCat.description),
+                      );
+                    }
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

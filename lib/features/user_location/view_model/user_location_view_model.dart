@@ -36,6 +36,7 @@ class UserLocationViewModel extends ChangeNotifier {
       notifyListeners();
     }
 
+    await Future.delayed(const Duration(seconds: 2));
     _authState?.setAuthenticated();
   }
 

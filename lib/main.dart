@@ -11,6 +11,7 @@ import 'package:place_see_app/core/location/location_service.dart';
 import 'package:place_see_app/core/location/location_tracking_manager.dart';
 import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/features/auth/screen/login_screen.dart';
+import 'package:place_see_app/features/auth/screen/registration_screen.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
 import 'package:place_see_app/features/auth/view_model/login_view_model.dart';
 import 'package:place_see_app/features/auth/view_model/registration_view_model.dart';
@@ -200,7 +201,7 @@ class AppRoot extends StatelessWidget {
               case AuthEnum.unauthenticated:
                 return const LoginScreen();
               case AuthEnum.authenticated:
-                return const CategoriesScreen();
+                return MainScaffoldWithNavBar();
               case AuthEnum.unknown:
                 return const OnboardingScreen();
               case AuthEnum.afterRegistration:

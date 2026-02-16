@@ -1,10 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/category/sub_category.dart';
 
 class Category {
-  final Long id;
+  final int id;
   final String name;
   String? description;
   String? imageUrl;
@@ -12,6 +10,7 @@ class Category {
   final bool hasBorder;
   final Color color;
   final Color textColor;
+  final Color? previousColor;
 
   Category({
     required this.id,
@@ -22,9 +21,13 @@ class Category {
     required this.color,
     required this.hasBorder,
     required this.textColor,
+    this.previousColor
   });
 
-  factory Category.fromJson(Map<String, dynamic> json, {required Color color, required bool hasBorder, required Color textColor}) {
+  factory Category.fromJson(
+      Map<String, dynamic> json,
+      {required Color color, required bool hasBorder, required Color textColor, Color? prevColor}
+  ) {
     final subCatsJson = json['children'] as List<dynamic>?;
     final subCats = subCatsJson?.map((el) => SubCategory.fromJson(el)).toList();
 
@@ -37,6 +40,7 @@ class Category {
         color: color,
         hasBorder: hasBorder,
         textColor: textColor,
+        previousColor: prevColor
     );
   }
 }

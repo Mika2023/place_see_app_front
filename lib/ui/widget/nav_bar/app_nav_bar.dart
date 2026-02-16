@@ -15,29 +15,41 @@ class AppNavBar extends StatelessWidget {
     final navProvider = context.read<NavBarProvider>();
     final currentIndex = context.watch<NavBarProvider>().index;
 
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      type: BottomNavigationBarType.fixed,
-      onTap: (i) {
-        final tappedTab = i >= navItems.length ? navItems[0].label : navItems[i].label;
-
-        if (i == currentIndex) {
-          NavigatorInnerTabService.instance.popUntilRoot(context, tab: tappedTab);
-        } else {
-          navProvider.setIndex(i);
-        }
-      },
-      selectedItemColor: AppColors.secondary,
-      unselectedItemColor: AppColors.additionalTwo,
-      items: List.generate(
-          navItems.length,
-          (i) => BottomNavigationBarItem(
-            icon: navItems[i].iconBuilder(false),
-            activeIcon: navItems[i].iconBuilder(true),
-            label: navItems[i].label,
+    return BottomAppBar(
+      elevation: 0,
+      padding: EdgeInsets.all(0),
+      child: Container(
+        height: 75,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          border: Border(
+            top: BorderSide(
+              color: AppColors.additionalTwo,
+              width: 1,
+            ),
           ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(navItems.length, (i) {
+            final isActive = currentIndex == i;
+            return GestureDetector(
+              onTap: () {
+                final tappedTab = i >= navItems.length ? navItems[0].label : navItems[i].label;
+
+                if (i == currentIndex) {
+                  NavigatorInnerTabService.instance.popUntilRoot(context, tab: tappedTab);
+                } else {
+                  navProvider.setIndex(i);
+                }
+              },
+              child: navItems[i].iconBuilder(isActive),
+            );
+          }),
+        ),
       ),
     );
+
   }
 }
 

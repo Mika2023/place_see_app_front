@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 class CategoryShort {
-  final Long id;
+  final int id;
   final String name;
   String? description;
 

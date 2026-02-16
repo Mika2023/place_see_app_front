@@ -8,21 +8,21 @@ class TopCircularBorder extends CustomClipper<Path> {
     const diameter = 48.75;
     final path = Path();
 
-    path.moveTo(0, size.height);
-    path.lineTo(0, diameter);
+    path.moveTo(0, diameter / 2);
 
     double x = 0;
     while (x < size.width) {
       path.arcTo(
           Rect.fromLTWH(x, 0, diameter, diameter),
           pi,
-          -pi,
+          pi,
           false
       );
       x += diameter;
     }
 
     path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
     path.close();
 
     return path;

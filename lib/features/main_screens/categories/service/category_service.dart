@@ -24,9 +24,12 @@ class CategoryService {
     if (rawCategories.isEmpty) return [];
 
     Color? lastColor;
+    int index = 0;
     return rawCategories.map((rawCategory) {
       final colorsPool = List<Color>.from(_colorsAvailable);
       if (lastColor != null && colorsPool.length > 1) colorsPool.remove(lastColor);
+
+      final previousColor = index == 0 ? null : lastColor;
 
       final color = colorsPool[_rand.nextInt(colorsPool.length)];
       lastColor = color;
@@ -35,9 +38,11 @@ class CategoryService {
         AppColors.secondary :
         AppColors.primary;
 
-      final hasBorder = _rand.nextBool();
+      final hasBorder = index != 0 && _rand.nextBool();
 
-      return Category.fromJson(rawCategory, color: color, hasBorder: hasBorder, textColor: textColor);
+      index += 1;
+
+      return Category.fromJson(rawCategory, color: color, hasBorder: hasBorder, textColor: textColor, prevColor: previousColor);
     }).toList();
   }
 }

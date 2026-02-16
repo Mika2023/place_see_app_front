@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/category/sub_category.dart';
 import 'package:place_see_app/ui/theme/app_typography.dart';
+import 'package:place_see_app/ui/widget/auto_scrolling_text_widget.dart';
 import 'package:place_see_app/ui/widget/stateful/pressable_widget.dart';
 
 class SubCategoryWidget extends StatelessWidget {
@@ -56,11 +57,15 @@ class SubCategoryWidget extends StatelessWidget {
                   ),
 
                   Positioned(
-                      left: 10,
-                      bottom: 10,
-                      child: Text(
-                          subCategory.name,
-                          style: AppTypography.textOnPicture
+                      left: 12,
+                      right: 12,
+                      bottom: 12,
+                      child: SizedBox(
+                        height: 25,
+                        child: AutoScrollingTextWidget(
+                          text: subCategory.name,
+                          style: AppTypography.textOnPicture,
+                        ),
                       )
                   ),
                 ],
