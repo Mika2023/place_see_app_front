@@ -35,10 +35,7 @@ class AuthApi {
 
   Future<Response> refresh(String refreshToken) {
     return dio.post(
-      '/auth/refresh',
-      data: {
-        'refreshToken': refreshToken,
-      },
+      '/auth/refresh?refreshToken=$refreshToken'
     );
   }
 }

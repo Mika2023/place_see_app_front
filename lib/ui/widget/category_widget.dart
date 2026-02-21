@@ -12,8 +12,8 @@ class CategoryWidget extends StatelessWidget {
 
   const CategoryWidget({super.key, required this.category});
 
-  void _onTap(BuildContext context, int id, String name, String? description) {
-    final catShort = CategoryShort(id, name, description);
+  void _onTap(BuildContext context, int id, String name, String? description, Color? backColor, Color? textColor) {
+    final catShort = CategoryShort(id, name, description, backColor, textColor);
     Navigator.of(context).push(
         MaterialPageRoute(builder: (_) =>
             PlacesScreen(categoryShort: catShort)));
@@ -50,7 +50,8 @@ class CategoryWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 PressableWidget(
-                  onPressed: () => _onTap(context, category.id, category.name, category.description),
+                  onPressed: () =>
+                      _onTap(context, category.id, category.name, category.description, category.color, category.textColor),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -107,7 +108,8 @@ class CategoryWidget extends StatelessWidget {
                       return SubCategoryWidget(
                         subCategory: subCat,
                         widthMultiplier: width,
-                        onTap: () => _onTap(context, subCat.id, subCat.name, subCat.description),
+                        onTap: () =>
+                            _onTap(context, subCat.id, subCat.name, subCat.description, category.color, category.textColor),
                       );
                     }
                 )

@@ -16,10 +16,10 @@ class AppNavBar extends StatelessWidget {
     final currentIndex = context.watch<NavBarProvider>().index;
 
     return BottomAppBar(
+      height: 70,
       elevation: 0,
       padding: EdgeInsets.all(0),
       child: Container(
-        height: 75,
         decoration: BoxDecoration(
           color: AppColors.primary,
           border: Border(

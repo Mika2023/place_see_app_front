@@ -49,7 +49,9 @@ class _AutoScrollingTextWidgetState extends State<AutoScrollingTextWidget> with 
 
     final availableWidth = context.size?.width ?? 0;
 
-    if (textPainter.width > availableWidth && !_shouldScroll) {
+    final textWidth = textPainter.width + 10;
+
+    if (textWidth > availableWidth && !_shouldScroll) {
       setState(() {
         _shouldScroll = true;
         _textWidth = textPainter.width;

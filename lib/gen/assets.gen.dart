@@ -34,6 +34,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/discs.svg
   SvgGenImage get discs => const SvgGenImage('assets/icons/discs.svg');
 
+  /// File path: assets/icons/filters.svg
+  SvgGenImage get filters => const SvgGenImage('assets/icons/filters.svg');
+
   /// File path: assets/icons/folder.svg
   SvgGenImage get folder => const SvgGenImage('assets/icons/folder.svg');
 
@@ -92,6 +95,7 @@ class $AssetsIconsGen {
     compass,
     connectionOffline,
     discs,
+    filters,
     folder,
     heartSelected,
     heart,

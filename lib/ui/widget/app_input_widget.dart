@@ -9,6 +9,8 @@ class AppInputWidget extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
 
+  final Widget? prefixIcon;
+
   const AppInputWidget({
     super.key,
     required this.hint,
@@ -16,6 +18,7 @@ class AppInputWidget extends StatelessWidget {
     this.state = AppInputState.normal,
     this.controller,
     this.obscureText = false,
+    this.prefixIcon,
   });
 
   @override
@@ -36,6 +39,14 @@ class AppInputWidget extends StatelessWidget {
             .inputDecorationTheme
             .border,
         isDense: true,
+        prefixIcon: prefixIcon != null ? Padding(
+          padding: const EdgeInsets.only(left: 16, right: 8),
+          child: prefixIcon,
+        ) : null,
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 29,
+          minHeight: 29,
+        )
       ),
     );
   }

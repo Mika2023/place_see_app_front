@@ -13,7 +13,7 @@ class NavigatorInnerTabService {
     navigatorKeys[tab] = key;
   }
 
-  NavigatorState? _getNavigator(String? tab) {
+  NavigatorState? getNavigator(String? tab) {
     if (tab != null && navigatorKeys.containsKey(tab)) {
       return navigatorKeys[tab]!.currentState;
     }
@@ -22,7 +22,7 @@ class NavigatorInnerTabService {
 
   Future<T?> push<T>(BuildContext context, Route<T> route, {String? tab}) {
     final activeTab = tab ?? _getCurrentTab(context);
-    final nav = _getNavigator(activeTab);
+    final nav = getNavigator(activeTab);
     if (nav != null) {
       return nav.push(route);
     }
@@ -31,7 +31,7 @@ class NavigatorInnerTabService {
 
   void pop<T extends Object?>(BuildContext context, {String? tab, T? returnResult}) {
     final activeTab = tab ?? _getCurrentTab(context);
-    final nav = _getNavigator(activeTab);
+    final nav = getNavigator(activeTab);
     if (nav != null && nav.canPop()) {
       nav.pop(returnResult);
     }
@@ -39,7 +39,7 @@ class NavigatorInnerTabService {
 
   void popUntilRoot(BuildContext context, {String? tab}) {
     final activeTab = tab ?? _getCurrentTab(context);
-    final nav = _getNavigator(activeTab);
+    final nav = getNavigator(activeTab);
     if (nav != null) {
       nav.popUntil((route) => route.isFirst);
     }

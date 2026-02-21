@@ -29,32 +29,45 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<CategoriesViewModel>();
 
-    if (vm.isLoading) {
-      return SafeArea(
-        child: PlaceholderWithIconWidget(
-          icon: Assets.icons.timeClock.svg(
-            width: 82,
-            height: 82,
-          ),
-          text: 'Сейчас появятся интересные категории...',
-          padding: const EdgeInsets.symmetric(horizontal: 22),
-        ),
-      );
-    }
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            color: vm.categories.isNotEmpty ? vm.categories.first.color : AppColors.primary,
-            child: SafeArea(
-                child: Column(
-                children: vm.categories.map((cat) => CategoryWidget(category: cat)).toList(),
-              ),
+    switch(vm.state) {
+      case CategoriesState.initial:
+      case CategoriesState.loading:
+        return SafeArea(
+          child: PlaceholderWithIconWidget(
+            icon: Assets.icons.timeClock.svg(
+              width: 82,
+              height: 82,
             ),
-          )
-        ],
-      ),
-    );
+            text: 'Сейчас появятся интересные категории...',
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+          ),
+        );
+      case CategoriesState.error:
+        return SafeArea(
+            child: PlaceholderWithIconWidget(
+              icon: Assets.icons.noData.svg(
+                  width: 82,
+                  height: 82
+              ),
+              text: 'Упс! Кажется, произошла ошибка\nПроверьте подключение к Интернету или обратитесь в поддержку',
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+            )
+        );
+      case CategoriesState.loaded:
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: vm.categories.isNotEmpty ? vm.categories.first.color : AppColors.primary,
+                child: SafeArea(
+                  child: Column(
+                    children: vm.categories.map((cat) => CategoryWidget(category: cat)).toList(),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+    }
   }
 }

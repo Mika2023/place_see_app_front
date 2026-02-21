@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:place_see_app/core/api/auth_api.dart';
 import 'package:place_see_app/core/api/category_api.dart';
+import 'package:place_see_app/core/api/favorite_places_api.dart';
+import 'package:place_see_app/core/api/places_api.dart';
 import 'package:place_see_app/core/api/user_location_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/auth/auth_state_coordinator.dart';
@@ -18,6 +20,8 @@ import 'package:place_see_app/features/auth/view_model/registration_view_model.d
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
 import 'package:place_see_app/features/main_screens/categories/service/category_service.dart';
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
+import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
+import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
 import 'package:place_see_app/features/user_location/service/user_location_service.dart';
 import 'package:place_see_app/features/user_location/view_model/user_location_view_model.dart';
@@ -101,6 +105,18 @@ class MyApp extends StatelessWidget {
             (_, dioClient, _) => CategoryApi(dioClient.dio),
         ),
 
+        ProxyProvider<DioClient, PlacesApi>(update:
+            (_, dioClient, _) => PlacesApi(dioClient.dio),
+        ),
+
+        ProxyProvider<DioClient, FavoritePlacesApi>(update:
+            (_, dioClient, _) => FavoritePlacesApi(dioClient.dio),
+        ),
+
+        ProxyProvider2<PlacesApi, FavoritePlacesApi, PlacesService>(update:
+            (_, placesApi, favPlacesApi, _) => PlacesService(placesApi, favPlacesApi),
+        ),
+
         ProxyProvider<CategoryApi, CategoryService>(update:
             (_, categoryApi, _) => CategoryService(categoryApi),
         ),
@@ -166,6 +182,14 @@ class MyApp extends StatelessWidget {
           create: (_) => CategoriesViewModel(),
           update: (_, categoryService, previous) {
             previous!.update(categoryService);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider<PlacesService, PlacesViewModel>(
+          create: (_) => PlacesViewModel(),
+          update: (_, placesService, previous) {
+            previous!.update(placesService);
             return previous;
           },
         ),

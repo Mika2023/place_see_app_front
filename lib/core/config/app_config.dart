@@ -4,4 +4,5 @@ class AppConfig {
   static final String backendBaseUrl = dotenv.env['BACKEND_BASE_URL']!;
   static const int connectTimeoutSeconds = 20;
   static const int receiveTimeoutSeconds = 20;
+  static final String baseUrlFs = dotenv.env['BASE_FS_URL']!;
 }
