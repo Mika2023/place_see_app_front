@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/category/category_short.dart';
+import 'package:place_see_app/core/model/filters/places_filters_state.dart';
 import 'package:place_see_app/features/main_screens/place/screen/place_screen.dart';
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/widget/app_input_widget.dart';
 import 'package:place_see_app/ui/widget/decoration/top_circular_border.dart';
+import 'package:place_see_app/ui/widget/filters/filters_sheet.dart';
 import 'package:place_see_app/ui/widget/place_widget.dart';
 import 'package:place_see_app/ui/widget/stateful/pressable_widget.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +79,23 @@ class _PlacesScreenState extends State<PlacesScreen> {
             )
           );
         }
+    );
+  }
+
+  void openFilters(BuildContext context, PlacesFiltersState state, PlacesViewModel vm) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => FiltersSheet(
+            initialState: state,
+            onApply: (newState) {
+              vm.applyFilters(newState);
+            },
+            onDismissed: () {
+              vm.resetFilters();
+            }
+        )
     );
   }
 
@@ -199,7 +218,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                                   ),
                               const SizedBox(width: 7,),
                               PressableWidget(
-                                onPressed: () => {}, //TODO: прописать функцию
+                                onPressed: () => openFilters(context, vm.filtersState, vm),
                                 child: Container(
                                     width: 58,
                                     height: 58,

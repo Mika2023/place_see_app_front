@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:place_see_app/core/model/filters/places_filters_state.dart';
 import 'package:place_see_app/core/model/place/place_card.dart';
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
@@ -19,6 +20,7 @@ class PlacesViewModel extends ChangeNotifier {
   String _query = '';
   List<String> suggestions = [];
   bool showSuggestions = false;
+  PlacesFiltersState filtersState = PlacesFiltersState();
 
   void update(PlacesService service) {
     _placesService = service;
@@ -138,6 +140,17 @@ class PlacesViewModel extends ChangeNotifier {
     );
     showSuggestions = false;
     searchPlaces(suggestion);
+    notifyListeners();
+  }
+
+  void applyFilters(PlacesFiltersState newFilters) {
+    filtersState = newFilters;
+    //TODO: прописать вызов апи
+    notifyListeners();
+  }
+
+  void resetFilters() {
+    filtersState.reset();
     notifyListeners();
   }
 }

@@ -24,6 +24,9 @@ class $AssetsIconsGen {
   SvgGenImage get cirlceClose =>
       const SvgGenImage('assets/icons/cirlce-close.svg');
 
+  /// File path: assets/icons/close.svg
+  SvgGenImage get close => const SvgGenImage('assets/icons/close.svg');
+
   /// File path: assets/icons/compass.svg
   SvgGenImage get compass => const SvgGenImage('assets/icons/compass.svg');
 
@@ -92,6 +95,7 @@ class $AssetsIconsGen {
   List<dynamic> get values => [
     arrowLeft,
     cirlceClose,
+    close,
     compass,
     connectionOffline,
     discs,
