@@ -3,6 +3,8 @@ import 'package:place_see_app/core/model/filters/day_enum.dart';
 import 'package:place_see_app/core/model/filters/working_hours_state.dart';
 import 'package:place_see_app/core/utils/working_hours_utils.dart';
 
+import '../../theme/app_colors.dart';
+
 class WorkingHoursPicker extends StatelessWidget {
   final WorkingHoursState state;
   final ValueChanged<WorkingHoursState> onChanged;
@@ -10,9 +12,11 @@ class WorkingHoursPicker extends StatelessWidget {
   const WorkingHoursPicker({super.key, required this.state, required this.onChanged});
 
   Widget _timeButton(BuildContext context,
-  {required String label,
-  required TimeOfDay? time,
-  required ValueChanged<TimeOfDay> onPick,
+  {
+    required String label,
+    required TimeOfDay? time,
+    required ValueChanged<TimeOfDay> onPick,
+    required String placeHolderIfTimeIsNull
   }) {
     return OutlinedButton(
         onPressed: () async {
@@ -20,7 +24,7 @@ class WorkingHoursPicker extends StatelessWidget {
           if (picked != null) onPick(picked);
         },
         child: Text(
-          '$label ${time != null ? time.format(context) : '--:--'}',
+          '$label ${time != null ? time.format(context) : placeHolderIfTimeIsNull}',
           style: Theme.of(context).textTheme.bodySmall,
         )
     );
@@ -36,8 +40,10 @@ class WorkingHoursPicker extends StatelessWidget {
             final selected = state.openDays.contains(d);
 
             return FilterChip(
+                backgroundColor: AppColors.additionalOne,
+                selectedColor: AppColors.accentOne,
                 label: Text(
-                  WorkingHoursUtils.dayShort(d),
+                  WorkingHoursUtils.dayFull(d),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 selected: selected,
@@ -70,9 +76,10 @@ class WorkingHoursPicker extends StatelessWidget {
                       WorkingHoursState(
                         openDays: state.openDays,
                         from: t,
-                        to: state.to
+                        to: state.to,
                       ),
-                    )
+                    ),
+                  placeHolderIfTimeIsNull: '00:00',
                 ),
             ),
             const SizedBox(width: 12,),
@@ -87,7 +94,8 @@ class WorkingHoursPicker extends StatelessWidget {
                         from: state.from,
                         to: t
                     ),
-                  )
+                  ),
+                placeHolderIfTimeIsNull: '23:59',
               ),
             ),
           ],

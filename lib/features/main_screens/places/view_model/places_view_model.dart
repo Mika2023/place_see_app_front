@@ -11,9 +11,12 @@ class PlacesViewModel extends ChangeNotifier {
   PlacesService? _placesService;
   bool _isLoading = false;
   bool _isSearching = false;
+  bool _isFiltering = false;
+  bool _isFilterMode = false;
   String? error;
   List<PlaceCard> _places = [];
   List<PlaceCard> _searchResults = [];
+  List<PlaceCard> _filterResults = [];
   AppButtonState _currentState = AppButtonState.enabled;
   Timer? _debounce;
   final Map<String, List<PlaceCard>> _searchCache = {};
@@ -35,8 +38,11 @@ class PlacesViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   bool get isSearching => _isSearching;
+  bool get isFiltering => _isFiltering;
+  bool get isFilterMode => _isFilterMode;
   List<PlaceCard> get places => _places;
   List<PlaceCard> get searchResults => _searchResults;
+  List<PlaceCard> get filterResults => _filterResults;
   AppButtonState get currentState => _currentState;
   bool get isSearchMode => _query.isNotEmpty;
 
@@ -61,6 +67,7 @@ class PlacesViewModel extends ChangeNotifier {
 
   Future<void> loadPlaces(int catId) async {
     try {
+      _isFilterMode = false;
       _isLoading = true;
       _currentState = AppButtonState.disabled;
       if (isSearchMode) _query = '';
@@ -99,6 +106,7 @@ class PlacesViewModel extends ChangeNotifier {
   }
 
   Future<void> searchPlaces(String query) async{
+    _isFilterMode = false;
     if (_searchCache.containsKey(query)) {
       _searchResults = _searchCache[query]!;
       _updateSuggestions();
@@ -143,14 +151,32 @@ class PlacesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void applyFilters(PlacesFiltersState newFilters) {
+  Future<void> applyFilters(PlacesFiltersState newFilters) async {
     filtersState = newFilters;
-    //TODO: прописать вызов апи
-    notifyListeners();
+    try {
+      _isFiltering = true;
+      _isFilterMode = true;
+      _currentState = AppButtonState.disabled;
+      notifyListeners();
+
+      _filterResults = (await _placesService?.loadPlacesByFilters(filtersState))!;
+    } catch (e) {
+      error = e.toString();
+
+      if(kDebugMode) {
+        print(error);
+      }
+
+    } finally {
+      _currentState = AppButtonState.enabled;
+      _isSearching = false;
+      notifyListeners();
+    }
   }
 
   void resetFilters() {
     filtersState.reset();
+    _isFilterMode = false;
     notifyListeners();
   }
 }

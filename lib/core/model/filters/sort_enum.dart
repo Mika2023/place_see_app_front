@@ -1,11 +1,12 @@
 enum SortEnum {
-  newest("Новизна"),
-  priceAsc("Возрастание цены"),
-  priceDesc("Убывание цены"),
-  popularity("Популярность"),
-  closest("Близость"),
-  defaultSort("По умолчанию");
+  defaultSort("По умолчанию", "По умолчанию"),
+  newest("Новизна", "Новизне"),
+  priceAsc("Возрастание цены", "Возрастанию цены"),
+  priceDesc("Убывание цены", "Убыванию цены"),
+  popularity("Популярность", "Популярности"),
+  closest("Близость", "Близости");
 
   final String name;
-  const SortEnum(this.name);
+  final String subName;
+  const SortEnum(this.name, this.subName);
 }

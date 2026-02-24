@@ -30,7 +30,7 @@ class AuthInterceptor extends Interceptor {
 
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
-    final isUnauthorizedEx = err.response?.statusCode == 401;
+    final isUnauthorizedEx = err.response?.statusCode == 401 || err.response?.statusCode == 403;
     final isAuthRequest = err.requestOptions.path.contains('/auth');
 
     if (!isUnauthorizedEx || isAuthRequest) {
@@ -67,8 +67,7 @@ class AuthInterceptor extends Interceptor {
       }
 
       final response = await dio.post(
-        '/auth/refresh',
-        data: {'refreshToken': refreshToken},
+        '/auth/refresh?refreshToken=$refreshToken',
         options: Options(headers: {'Authorization': null})
       );
 

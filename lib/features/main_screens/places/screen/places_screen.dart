@@ -82,8 +82,10 @@ class _PlacesScreenState extends State<PlacesScreen> {
     );
   }
 
-  void openFilters(BuildContext context, PlacesFiltersState state, PlacesViewModel vm) {
-    showModalBottomSheet(
+  Future<void> openFilters(BuildContext context, PlacesFiltersState state, PlacesViewModel vm) async {
+    FocusScope.of(context).unfocus();
+
+    final response = await showModalBottomSheet<bool>(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
@@ -97,6 +99,10 @@ class _PlacesScreenState extends State<PlacesScreen> {
             }
         )
     );
+
+    if (response != true) {
+      vm.resetFilters();
+    }
   }
 
   Widget _buildBody(BuildContext context) {
@@ -126,7 +132,17 @@ class _PlacesScreenState extends State<PlacesScreen> {
       );
     }
 
-    final places = vm.isSearchMode ? vm.searchResults : vm.places;
+    if (vm.isFilterMode && !vm.isFiltering && vm.filterResults.isEmpty) {
+      return _onError(
+        'По вашему запросу ничего не найдено',
+        Assets.icons.search.svg(
+            width: 82,
+            height: 82
+        ),
+      );
+    }
+
+    final places = vm.isSearchMode ? vm.searchResults : (vm.isFilterMode ? vm.filterResults : vm.places);
 
     return ListView.separated(
       padding: const EdgeInsets.all(22),

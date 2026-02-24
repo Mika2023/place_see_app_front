@@ -29,4 +29,18 @@ class WorkingHoursUtils {
 
     return map[day]!;
   }
+
+  static String dayFull(DayEnum day) {
+    const map = {
+      DayEnum.monday: 'Понедельник',
+      DayEnum.tuesday: 'Вторник',
+      DayEnum.wednesday: 'Среда',
+      DayEnum.thursday: 'Четверг',
+      DayEnum.friday: 'Пятница',
+      DayEnum.saturday: 'Суббота',
+      DayEnum.sunday: 'Воскресенье',
+    };
+
+    return map[day]!;
+  }
 }

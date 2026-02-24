@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/filters/price_filter.dart';
+import 'package:place_see_app/core/utils/price_utils.dart';
 import 'package:place_see_app/ui/widget/filters/price_preset_section.dart';
 
 class PriceFilterSection extends StatefulWidget {
@@ -16,13 +17,11 @@ class _PriceFilterSectionState extends State<PriceFilterSection> {
   late final TextEditingController _minController;
   late final TextEditingController _maxController;
   late PriceFilter state;
-  late PricePreset preset = PricePreset.any;
 
   @override
   void initState() {
     super.initState();
     state = widget.initialState;
-    preset = PricePreset.any;
 
     _minController = TextEditingController(text: widget.initialState.minPrice?.toString() ?? '');
     _maxController = TextEditingController(text: widget.initialState.maxPrice?.toString() ?? '');
@@ -34,8 +33,6 @@ class _PriceFilterSectionState extends State<PriceFilterSection> {
 
     if (oldWidget.initialState != widget.initialState) {
       state = widget.initialState;
-      preset = PricePreset.any;
-
       _minController.text = widget.initialState.minPrice?.toString() ?? '';
       _maxController.text = widget.initialState.maxPrice?.toString() ?? '';
     }
@@ -66,6 +63,8 @@ class _PriceFilterSectionState extends State<PriceFilterSection> {
 
   @override
   Widget build(BuildContext context) {
+    final preset = PriceUtils.presetFromFilter(state);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,12 +114,10 @@ class _PriceFilterSectionState extends State<PriceFilterSection> {
 
         PricePresetSection(
             selected: preset,
-            onChanged: (preset) {
+            onChanged: (newPreset) {
               if (!mounted) return;
-             setState(() {
-               this.preset = preset;
-               _applyPreset(preset.priceFilter.minPrice, preset.priceFilter.maxPrice);
-             });
+
+              _applyPreset(newPreset.priceFilter.minPrice, newPreset.priceFilter.maxPrice);
             }
         )
       ],

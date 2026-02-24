@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/theme/app_typography.dart';

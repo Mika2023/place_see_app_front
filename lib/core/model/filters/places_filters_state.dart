@@ -1,4 +1,5 @@
 import 'package:place_see_app/core/model/filters/filters_model.dart';
+import 'package:place_see_app/core/model/filters/is_favorite_by_user_enum.dart';
 import 'package:place_see_app/core/model/filters/price_filter.dart';
 import 'package:place_see_app/core/model/filters/sort_enum.dart';
 import 'package:place_see_app/core/model/filters/transport_type_enum.dart';
@@ -9,7 +10,7 @@ class PlacesFiltersState {
   Set<int> categoryIds = {};
   Map<TransportTypeEnum, Set<String>> selectedStops = {};
   WorkingHoursState workingHoursState = WorkingHoursState();
-  bool? isFavoriteByUser;
+  IsFavoriteByUserEnum isFavoriteByUserState = IsFavoriteByUserEnum.any;
 
   SortEnum sort = SortEnum.defaultSort;
   int page = 0;
@@ -20,7 +21,7 @@ class PlacesFiltersState {
     categoryIds = {};
     selectedStops = {};
     workingHoursState.reset();
-    isFavoriteByUser = null;
+    isFavoriteByUserState = IsFavoriteByUserEnum.any;
     sort = SortEnum.defaultSort;
     page = 0;
     size = 20;
@@ -32,7 +33,7 @@ class PlacesFiltersState {
       maxPrice: priceFilter.maxPrice,
       categoryIds: categoryIds.isEmpty ? null : categoryIds,
       selectedStops: selectedStops.map((key, val) => MapEntry(key.name, val)),
-      isFavoriteByUser: isFavoriteByUser,
+      isFavoriteByUser: isFavoriteByUserState.isFavorite,
       workingHoursFilter: workingHoursState.toDto(),
       sort: sort.name,
       page: page,
