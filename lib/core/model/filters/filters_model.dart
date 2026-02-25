@@ -7,6 +7,7 @@ class FiltersModel {
   final Map<String, Set<String>>? selectedStops;
   final WorkingHoursFilter? workingHoursFilter;
   final bool? isFavoriteByUser;
+  final Set<int>? tagIds;
 
   final String? sort;
   final int? page;
@@ -21,7 +22,8 @@ class FiltersModel {
     this.isFavoriteByUser,
     this.sort,
     this.page,
-    this.size
+    this.size,
+    this.tagIds
   });
 
   Map<String, dynamic> toJson() => _removeNulls({
@@ -31,6 +33,7 @@ class FiltersModel {
     "selectedStops": selectedStops,
     "workingHours": workingHoursFilter?.toJson(),
     "isFavoriteByUser": isFavoriteByUser,
+    "tagIds": tagIds?.toList(),
     "sort": sort,
     "page": page,
     "size": size

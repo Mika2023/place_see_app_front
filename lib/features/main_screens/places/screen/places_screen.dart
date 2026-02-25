@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/category/category_short.dart';
 import 'package:place_see_app/core/model/filters/places_filters_state.dart';
+import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/screen/place_screen.dart';
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
@@ -32,6 +33,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PlacesViewModel>().loadPlaces(widget.categoryShort.id);
+      context.read<FiltersViewModel>().preloadAll();
     });
   }
 
@@ -85,10 +87,17 @@ class _PlacesScreenState extends State<PlacesScreen> {
   Future<void> openFilters(BuildContext context, PlacesFiltersState state, PlacesViewModel vm) async {
     FocusScope.of(context).unfocus();
 
+    final animationController = AnimationController(
+        vsync: Navigator.of(context),
+      duration: const Duration(milliseconds: 800),
+      reverseDuration: const Duration(milliseconds: 350)
+    );
+
     final response = await showModalBottomSheet<bool>(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
+        transitionAnimationController: animationController,
         builder: (_) => FiltersSheet(
             initialState: state,
             onApply: (newState) {

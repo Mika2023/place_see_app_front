@@ -6,11 +6,13 @@ import 'package:place_see_app/core/api/auth_api.dart';
 import 'package:place_see_app/core/api/category_api.dart';
 import 'package:place_see_app/core/api/favorite_places_api.dart';
 import 'package:place_see_app/core/api/places_api.dart';
+import 'package:place_see_app/core/api/tag_api.dart';
 import 'package:place_see_app/core/api/user_location_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/auth/auth_state_coordinator.dart';
 import 'package:place_see_app/core/location/location_service.dart';
 import 'package:place_see_app/core/location/location_tracking_manager.dart';
+import 'package:place_see_app/core/model/tag/tag.dart';
 import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/features/auth/screen/login_screen.dart';
 import 'package:place_see_app/features/auth/screen/registration_screen.dart';
@@ -20,6 +22,8 @@ import 'package:place_see_app/features/auth/view_model/registration_view_model.d
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
 import 'package:place_see_app/features/main_screens/categories/service/category_service.dart';
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
+import 'package:place_see_app/features/main_screens/filters/service/filters_service.dart';
+import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
@@ -113,8 +117,16 @@ class MyApp extends StatelessWidget {
             (_, dioClient, _) => FavoritePlacesApi(dioClient.dio),
         ),
 
+        ProxyProvider<DioClient, TagApi>(update:
+            (_, dioClient, _) => TagApi(dioClient.dio),
+        ),
+
         ProxyProvider2<PlacesApi, FavoritePlacesApi, PlacesService>(update:
             (_, placesApi, favPlacesApi, _) => PlacesService(placesApi, favPlacesApi),
+        ),
+
+        ProxyProvider3<CategoryApi, TagApi, PlacesApi, FiltersService>(update:
+            (_, categoryApi, tagApi, placesApi, _) => FiltersService(placesApi, tagApi, categoryApi),
         ),
 
         ProxyProvider<CategoryApi, CategoryService>(update:
@@ -182,6 +194,14 @@ class MyApp extends StatelessWidget {
           create: (_) => CategoriesViewModel(),
           update: (_, categoryService, previous) {
             previous!.update(categoryService);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider<FiltersService, FiltersViewModel>(
+          create: (_) => FiltersViewModel(),
+          update: (_, filterService, previous) {
+            previous!.update(filterService);
             return previous;
           },
         ),

@@ -8,6 +8,7 @@ import 'package:place_see_app/core/model/filters/working_hours_state.dart';
 class PlacesFiltersState {
   PriceFilter priceFilter = PriceFilter();
   Set<int> categoryIds = {};
+  Set<int> tagIds = {};
   Map<TransportTypeEnum, Set<String>> selectedStops = {};
   WorkingHoursState workingHoursState = WorkingHoursState();
   IsFavoriteByUserEnum isFavoriteByUserState = IsFavoriteByUserEnum.any;
@@ -19,6 +20,7 @@ class PlacesFiltersState {
   void reset() {
     priceFilter = priceFilter.reset();
     categoryIds = {};
+    tagIds = {};
     selectedStops = {};
     workingHoursState.reset();
     isFavoriteByUserState = IsFavoriteByUserEnum.any;
@@ -35,6 +37,7 @@ class PlacesFiltersState {
       selectedStops: selectedStops.map((key, val) => MapEntry(key.name, val)),
       isFavoriteByUser: isFavoriteByUserState.isFavorite,
       workingHoursFilter: workingHoursState.toDto(),
+      tagIds: tagIds.isEmpty ? null : tagIds,
       sort: sort.name,
       page: page,
       size: size

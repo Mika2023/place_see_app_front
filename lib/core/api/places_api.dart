@@ -32,6 +32,7 @@ class PlacesApi {
 
   Future<List<Map<String, dynamic>>> getPlacesByFilters(FiltersModel filters) async {
     try {
+      print(filters.toJson());
       final response = await dio.post(
           '/places/filters',
           data: filters.toJson(),
@@ -63,6 +64,26 @@ class PlacesApi {
       if (response.statusCode == 200) {
         final data = response.data as List;
         return data.map((el) => el as Map<String, dynamic>).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return [];
+    }
+  }
+
+  Future<List<String>> getAllStationsByTransportType(String transportType) async {
+    try {
+      final response = await dio.get(
+        '/places/filters?transportType=$transportType',
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data as List;
+        return data.map((el) => el as String).toList();
       } else {
         return [];
       }

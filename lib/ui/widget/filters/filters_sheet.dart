@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:place_see_app/core/model/category/category_for_filters.dart';
+import 'package:place_see_app/core/loadable/load_status_enum.dart';
 import 'package:place_see_app/core/model/filters/places_filters_state.dart';
 import 'package:place_see_app/core/model/filters/transport_type_enum.dart';
 import 'package:place_see_app/core/utils/working_hours_utils.dart';
+import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/widget/app_button.dart';
 import 'package:place_see_app/ui/widget/app_text_button.dart';
@@ -11,6 +12,7 @@ import 'package:place_see_app/ui/widget/filters/is_favorite_by_user_section.dart
 import 'package:place_see_app/ui/widget/filters/price_filter_section.dart';
 import 'package:place_see_app/ui/widget/filters/sorted_by_section.dart';
 import 'package:place_see_app/ui/widget/filters/working_hours_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../../gen/assets.gen.dart';
 
@@ -36,6 +38,8 @@ class _FiltersSheetState extends State<FiltersSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<FiltersViewModel>();
+
     return DraggableScrollableSheet(
         initialChildSize: 0.9,
         minChildSize: 0.5,
@@ -106,24 +110,62 @@ class _FiltersSheetState extends State<FiltersSheet> {
 
                         FiltersSection(
                             title: 'Категории',
-                            selectedText: state.categoryIds.join(', '),
-                            builder: (_) => Wrap(
-                              spacing: 8,
-                              children: categories.map((c) => FilterChip(
-                                backgroundColor: AppColors.additionalOne,
-                                  selectedColor: AppColors.accentOne,
-                                  label: Text(
-                                    c.name,
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                  selected: state.categoryIds.contains(c.id),
-                                  onSelected: (isSelected) {
-                                    setState(() {
-                                      isSelected ? state.categoryIds.add(c.id) : state.categoryIds.remove(c.id);
-                                    });
-                                  }
-                              )).toList(),
-                            )
+                            selectedText: vm.getStringForCategories(state.categoryIds),
+                            builder: (_) {
+                              if (vm.categoriesForFiltersState == LoadStatusEnum.loading) {
+                                return const CircularProgressIndicator(strokeWidth: 2,);
+                              }
+
+                              final categories = vm.categoriesForFilters;
+
+                              return Wrap(
+                                spacing: 8,
+                                children: categories.map((c) => FilterChip(
+                                    backgroundColor: AppColors.additionalOne,
+                                    selectedColor: AppColors.accentOne,
+                                    label: Text(
+                                      c.name,
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    selected: state.categoryIds.contains(c.id),
+                                    onSelected: (isSelected) {
+                                      setState(() {
+                                        isSelected ? state.categoryIds.add(c.id) : state.categoryIds.remove(c.id);
+                                      });
+                                    }
+                                )).toList(),
+                              );
+                            }
+                        ),
+
+                        FiltersSection(
+                            title: 'Теги',
+                            selectedText: vm.getStringForTags(state.tagIds),
+                            builder: (_) {
+                              if (vm.tagsForFiltersState == LoadStatusEnum.loading) {
+                                return const CircularProgressIndicator(strokeWidth: 2,);
+                              }
+
+                              final tags = vm.tagsForFilters;
+
+                              return Wrap(
+                                spacing: 8,
+                                children: tags.map((t) => FilterChip(
+                                    backgroundColor: AppColors.additionalOne,
+                                    selectedColor: AppColors.accentOne,
+                                    label: Text(
+                                      t.name,
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    selected: state.tagIds.contains(t.id),
+                                    onSelected: (isSelected) {
+                                      setState(() {
+                                        isSelected ? state.tagIds.add(t.id) : state.tagIds.remove(t.id);
+                                      });
+                                    }
+                                )).toList(),
+                              );
+                            }
                         ),
 
                         FiltersSection(
@@ -158,36 +200,44 @@ class _FiltersSheetState extends State<FiltersSheet> {
                             selectedText: state.selectedStops[TransportTypeEnum.metro] != null ?
                               state.selectedStops[TransportTypeEnum.metro]!.join(', ') :
                               '',
-                            builder: (_) => Wrap(
-                              spacing: 8,
-                              children: metroStations.map((station) => FilterChip(
-                                  backgroundColor: AppColors.additionalOne,
-                                  selectedColor: AppColors.accentOne,
-                                  label: Text(
-                                    station,
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                  selected: state.selectedStops[TransportTypeEnum.metro] != null ?
+                            builder: (_) {
+                              if (vm.stationsForFiltersState == LoadStatusEnum.loading) {
+                                return const CircularProgressIndicator(strokeWidth: 2,);
+                              }
+
+                              final metroStations = vm.stationsForFilters;
+
+                              return  Wrap(
+                                spacing: 8,
+                                children: metroStations.map((station) => FilterChip(
+                                    backgroundColor: AppColors.additionalOne,
+                                    selectedColor: AppColors.accentOne,
+                                    label: Text(
+                                      station,
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    selected: state.selectedStops[TransportTypeEnum.metro] != null ?
                                     state.selectedStops[TransportTypeEnum.metro]!.contains(station) :
                                     false,
-                                  onSelected: (isSelected) {
-                                    setState(() {
-                                      final selectedStops = state.selectedStops[TransportTypeEnum.metro] ?? Set.identity();
-                                      final updatedStops = Set.of(selectedStops);
+                                    onSelected: (isSelected) {
+                                      setState(() {
+                                        final selectedStops = state.selectedStops[TransportTypeEnum.metro] ?? Set.identity();
+                                        final updatedStops = Set.of(selectedStops);
 
-                                      if (isSelected && !updatedStops.contains(station)) {
-                                        updatedStops.add(station);
-                                      } else {
-                                        updatedStops.remove(station);
-                                      }
-                                      state.selectedStops = {
-                                        ...state.selectedStops,
-                                        TransportTypeEnum.metro: updatedStops,
-                                      };
-                                    });
-                                  }
-                              )).toList(),
-                            )
+                                        if (isSelected && !updatedStops.contains(station)) {
+                                          updatedStops.add(station);
+                                        } else {
+                                          updatedStops.remove(station);
+                                        }
+                                        state.selectedStops = {
+                                          ...state.selectedStops,
+                                          TransportTypeEnum.metro: updatedStops,
+                                        };
+                                      });
+                                    }
+                                )).toList(),
+                              );
+                            }
                         ),
                       ],
                     )
@@ -215,15 +265,3 @@ class _FiltersSheetState extends State<FiltersSheet> {
     );
   }
 }
-
-final List<CategoryForFilters> categories = [
-  CategoryForFilters(1, 'Азия'),
-  CategoryForFilters(2, 'Европа'),
-  CategoryForFilters(3, 'Москва'),
-];
-
-final List<String> metroStations = [
-  "ВДНХ",
-  "Ботанический сад",
-  "Рижская",
-];
