@@ -37,27 +37,48 @@ class _AutoScrollingTextWidgetState extends State<AutoScrollingTextWidget> with 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkOverflow());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _checkOverflow());
   }
 
   void _checkOverflow() {
-    final textPainter = TextPainter(
-      text: TextSpan(text: widget.text, style: widget.style),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout();
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox != null && mounted) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: widget.text, style: widget.style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+      )..layout();
 
-    final availableWidth = context.size?.width ?? 0;
+      final availableWidth = context.size?.width ?? 0;
 
-    final textWidth = textPainter.width + 10;
+      final textWidth = textPainter.width + 10;
 
-    if (textWidth > availableWidth && !_shouldScroll) {
-      setState(() {
-        _shouldScroll = true;
-        _textWidth = textPainter.width;
-      });
-      _startScrolling();
+      if (textWidth > availableWidth && !_shouldScroll) {
+        setState(() {
+          _shouldScroll = true;
+          _textWidth = textPainter.width;
+        });
+        _startScrolling();
+      }
     }
+  }
+
+  void _checkOverflowWithWidth(double availableWidth) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: widget.text, style: widget.style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      final textWidth = textPainter.width + 10;
+
+      if (textWidth > availableWidth && !_shouldScroll && mounted) {
+        setState(() {
+          _shouldScroll = true;
+          _textWidth = textPainter.width;
+        });
+        _startScrolling();
+      }
   }
 
   Future<void> _startScrolling() async {
@@ -92,47 +113,54 @@ class _AutoScrollingTextWidgetState extends State<AutoScrollingTextWidget> with 
 
   @override
   Widget build(BuildContext context) {
-    if (!_shouldScroll) {
-      return Text(
-        widget.text,
-        style: widget.style,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      );
-    }
+    return LayoutBuilder(
+        builder: (context, constraints) {
+          final availableWidth = constraints.maxWidth;
 
-    return ShaderMask(
-      shaderCallback: (Rect bounds) {
-        return LinearGradient(
-          begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Colors.transparent,
-              Colors.black,
-              Colors.black,
-              Colors.transparent,
-            ],
-          stops: const [
-            0.0,
-            0.05,
-            0.95,
-            1.0
-          ]
-        ).createShader(bounds);
-      },
-      blendMode: BlendMode.dstIn,
-      child: SingleChildScrollView(
-        controller: _controller,
-        scrollDirection: Axis.horizontal,
-        physics: const NeverScrollableScrollPhysics(),
-        child: Row(
-          children: [
-            Text(widget.text, style: widget.style,),
-            SizedBox(width: widget.gap,),
-            Text(widget.text, style: widget.style,)
-          ],
-        ),
-      ),
+          if (!_shouldScroll) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => _checkOverflowWithWidth(availableWidth));
+            return Text(
+              widget.text,
+              style: widget.style,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            );
+          }
+
+          return ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black,
+                    Colors.black,
+                    Colors.transparent,
+                  ],
+                  stops: const [
+                    0.0,
+                    0.05,
+                    0.95,
+                    1.0
+                  ]
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: SingleChildScrollView(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              child: Row(
+                children: [
+                  Text(widget.text, style: widget.style,),
+                  SizedBox(width: widget.gap,),
+                  Text(widget.text, style: widget.style,)
+                ],
+              ),
+            ),
+          );
+        }
     );
   }
 }

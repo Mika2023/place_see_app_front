@@ -24,6 +24,7 @@ import 'package:place_see_app/features/main_screens/categories/service/category_
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
 import 'package:place_see_app/features/main_screens/filters/service/filters_service.dart';
 import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
+import 'package:place_see_app/features/main_screens/place/view_model/place_view_model.dart';
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
@@ -41,6 +42,8 @@ import 'package:place_see_app/ui/theme/theme.dart';
 import 'package:place_see_app/ui/widget/main_scaffold_with_nav_bar.dart';
 import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'features/main_screens/place/service/place_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -158,6 +161,11 @@ class MyApp extends StatelessWidget {
             UserLocationService(permissionService, appSettings),
         ),
 
+        ProxyProvider2<PlacesApi, FavoritePlacesApi, PlaceService>(update:
+            (_, placesApi, favoritePlacesApi, _) =>
+            PlaceService(favoritePlacesApi, placesApi),
+        ),
+
         ChangeNotifierProxyProvider2<OnboardingService, NavigatorService, OnboardingViewModel>(
           create: (_) => OnboardingViewModel(),
           update: (_, onboardingService, navigatorService, previous) {
@@ -210,6 +218,14 @@ class MyApp extends StatelessWidget {
           create: (_) => PlacesViewModel(),
           update: (_, placesService, previous) {
             previous!.update(placesService);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider<PlaceService, PlaceViewModel>(
+          create: (_) => PlaceViewModel(),
+          update: (_, placeService, previous) {
+            previous!.update(placeService);
             return previous;
           },
         ),

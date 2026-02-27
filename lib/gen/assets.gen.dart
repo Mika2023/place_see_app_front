@@ -17,8 +17,23 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/arrow-down.svg
+  SvgGenImage get arrowDown => const SvgGenImage('assets/icons/arrow-down.svg');
+
+  /// File path: assets/icons/arrow-left-dark.svg
+  SvgGenImage get arrowLeftDark =>
+      const SvgGenImage('assets/icons/arrow-left-dark.svg');
+
   /// File path: assets/icons/arrow-left.svg
   SvgGenImage get arrowLeft => const SvgGenImage('assets/icons/arrow-left.svg');
+
+  /// File path: assets/icons/arrow-right.svg
+  SvgGenImage get arrowRight =>
+      const SvgGenImage('assets/icons/arrow-right.svg');
+
+  /// File path: assets/icons/circle-close-light.svg
+  SvgGenImage get circleCloseLight =>
+      const SvgGenImage('assets/icons/circle-close-light.svg');
 
   /// File path: assets/icons/cirlce-close.svg
   SvgGenImage get cirlceClose =>
@@ -93,7 +108,11 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    arrowDown,
+    arrowLeftDark,
     arrowLeft,
+    arrowRight,
+    circleCloseLight,
     cirlceClose,
     close,
     compass,

@@ -105,6 +105,11 @@ class PlacesViewModel extends ChangeNotifier {
     });
   }
 
+  void clearSearch() {
+    _query = '';
+    notifyListeners();
+  }
+
   Future<void> searchPlaces(String query) async{
     _isFilterMode = false;
     if (_searchCache.containsKey(query)) {

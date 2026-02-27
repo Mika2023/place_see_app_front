@@ -94,4 +94,43 @@ class PlacesApi {
       return [];
     }
   }
+
+  Future<Map<String, dynamic>> getPlaceById(int placeId) async {
+    try {
+      final response = await dio.get(
+        '/places/$placeId'
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return {};
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getPlacesNearbyByPlaceId(int placeId) async {
+    try {
+      final response = await dio.get(
+          '/places/$placeId/placesNearby'
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data as List;
+        return data.map((el) => el as Map<String, dynamic>).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return [];
+    }
+  }
 }

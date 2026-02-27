@@ -13,7 +13,6 @@ class PlaceWidget extends StatelessWidget {
   final PlaceCard placeCard;
   final VoidCallback? onTap;
   final VoidCallback? onFavTap;
-  final bool isFavorite;
   final double height;
 
   const PlaceWidget({
@@ -21,7 +20,6 @@ class PlaceWidget extends StatelessWidget {
     required this.placeCard,
     this.onTap,
     this.onFavTap,
-    this.isFavorite = false,
     this.height = 202
   });
 

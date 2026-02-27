@@ -26,6 +26,7 @@ class PlacesScreen extends StatefulWidget {
 
 class _PlacesScreenState extends State<PlacesScreen> {
   final _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -86,6 +87,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
 
   Future<void> openFilters(BuildContext context, PlacesFiltersState state, PlacesViewModel vm) async {
     FocusScope.of(context).unfocus();
+    _searchFocusNode.unfocus();
 
     final animationController = AnimationController(
         vsync: Navigator.of(context),
@@ -161,11 +163,13 @@ class _PlacesScreenState extends State<PlacesScreen> {
         final place = places[index];
         return PlaceWidget(
           placeCard: place,
-          onTap: () => {
+          onTap: () =>
+          {
+            _searchFocusNode.unfocus(),
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) =>
                     PlaceScreen(id: place.id)))
-          },
+        },
           onFavTap: () => vm.toggleFavorite(index, fromSearch: vm.isSearchMode),
         );
       },
@@ -237,8 +241,19 @@ class _PlacesScreenState extends State<PlacesScreen> {
                                           width: 26,
                                           height: 26
                                       ),
+                                      postfixIcon: vm.isSearchMode ? GestureDetector(
+                                        onTap: () {
+                                          vm.clearSearch();
+                                          _searchController.clear();
+                                        },
+                                        child: Assets.icons.close.svg(
+                                            width: 17,
+                                            height: 17
+                                        ),
+                                      ) : null,
                                       onChanged: vm.onSearchChanged,
                                       controller: _searchController,
+                                    focusNode: _searchFocusNode,
                                     ),
                                   ),
                               const SizedBox(width: 7,),

@@ -10,6 +10,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback onPressed;
   final AppButtonStyle buttonStyle;
   final AppButtonState state;
+  final Widget? icon;
 
   const AppButton({
     super.key,
@@ -17,6 +18,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.buttonStyle = AppButtonStyle.light,
     this.state = AppButtonState.enabled,
+    this.icon,
   });
 
   @override
@@ -78,6 +80,15 @@ class AppButton extends StatelessWidget {
       );
     }
 
-    return Text(textOnButton);
+    if (icon == null) return Text(textOnButton);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(textOnButton),
+        const SizedBox(width: 12,),
+        icon!
+      ],
+    );
   }
 }

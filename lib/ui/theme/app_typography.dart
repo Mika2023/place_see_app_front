@@ -120,4 +120,11 @@ class AppTypography {
     fontWeight: FontWeight.normal,
     color: AppColors.hintDark,
   );
+
+  static const smallTextLight = TextStyle(
+    fontFamily: 'NT Somic',
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: AppColors.additionalThree,
+  );
 }

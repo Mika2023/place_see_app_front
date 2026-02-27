@@ -15,7 +15,8 @@ final appTheme = ThemeData(
     bodyLarge: AppTypography.bodyLargeDark,
     bodyMedium: AppTypography.bodyDark,
     bodySmall: AppTypography.subTextDark,
-    labelMedium: AppTypography.subTextDark
+    labelMedium: AppTypography.subTextDark,
+    labelSmall: AppTypography.smallTextLight
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

@@ -7,9 +7,11 @@ class AppInputWidget extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final AppInputState state;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final bool obscureText;
 
   final Widget? prefixIcon;
+  final Widget? postfixIcon;
 
   const AppInputWidget({
     super.key,
@@ -19,12 +21,15 @@ class AppInputWidget extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.prefixIcon,
+    this.postfixIcon,
+    this.focusNode,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       obscureText: obscureText,
       onChanged: onChanged,
       style: _textStyleByState(context),
@@ -46,6 +51,14 @@ class AppInputWidget extends StatelessWidget {
         prefixIconConstraints: const BoxConstraints(
           minWidth: 29,
           minHeight: 29,
+        ),
+        suffixIcon: postfixIcon != null ? Padding(
+          padding: const EdgeInsets.only(right: 16, left: 8),
+          child: postfixIcon,
+        ) : null,
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: 15,
+          minHeight: 15,
         )
       ),
     );
