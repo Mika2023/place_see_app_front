@@ -10,8 +10,8 @@ class UserLocationApi {
     return dio.post(
         '/user-location/update-location',
         data: {
-          'latitude': latitude,
-          'longitude': longitude,
+          'latitude': double.parse(latitude.toStringAsFixed(6)),
+          'longitude': double.parse(longitude.toStringAsFixed(6)),
         }
     );
   }

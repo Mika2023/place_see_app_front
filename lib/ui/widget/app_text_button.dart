@@ -7,12 +7,15 @@ class AppTextButton extends StatelessWidget {
   final String textOnButton;
   final VoidCallback onPressed;
   final AppButtonState state;
+  final TextStyle? style;
+  final TextOverflow? overflow;
+  final int? maxLines;
 
   const AppTextButton({
     super.key,
     required this.textOnButton,
     required this.onPressed,
-    this.state = AppButtonState.enabled,
+    this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines,
   });
 
   @override
@@ -30,6 +33,9 @@ class AppTextButton extends StatelessWidget {
       child: Text(
           textOnButton,
         textAlign: TextAlign.center,
+        style: style,
+        overflow: overflow,
+        maxLines: maxLines,
       ),
     );
   }

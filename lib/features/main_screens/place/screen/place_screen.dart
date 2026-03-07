@@ -6,9 +6,12 @@ import 'package:place_see_app/features/main_screens/place/screen/widgets/place_u
 import 'package:place_see_app/features/main_screens/place/screen/widgets/places_nearby.dart';
 import 'package:place_see_app/features/main_screens/place/screen/widgets/working_hours_card.dart';
 import 'package:place_see_app/features/main_screens/place/view_model/place_view_model.dart';
+import 'package:place_see_app/ui/navigator/navigator_inner_tab_service.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/theme/app_typography.dart';
 import 'package:place_see_app/ui/widget/app_button.dart';
+import 'package:place_see_app/ui/widget/nav_bar/map_data_provider.dart';
+import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../gen/assets.gen.dart';
@@ -242,7 +245,10 @@ class _PlaceScreenState extends State<PlaceScreen> {
                         width: 19,
                         height: 16
                       ),
-                      onPressed: () => {} //TODO: заменить на функцию перехода на экран карты
+                      onPressed: () {
+                        context.read<MapDataProvider>().setPlace(vm.placeFullInfo!.id, vm.placeFullInfo!.name);
+                        context.read<NavBarProvider>().setIndex(1);
+                      }
                 ),
               )
           )

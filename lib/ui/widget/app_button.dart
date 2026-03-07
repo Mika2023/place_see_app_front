@@ -26,7 +26,7 @@ class AppButton extends StatelessWidget {
     bool isDisabled = state == AppButtonState.loading || state == AppButtonState.disabled;
 
     return PressableWidget(
-        onPressed: onPressed,
+        onPressed: isDisabled? null : onPressed,
         child: ElevatedButton(
             onPressed: isDisabled? null : onPressed,
             style: _styleByVariant(context, isDisabled),

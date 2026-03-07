@@ -31,9 +31,18 @@ class $AssetsIconsGen {
   SvgGenImage get arrowRight =>
       const SvgGenImage('assets/icons/arrow-right.svg');
 
+  /// File path: assets/icons/arrow-up.svg
+  SvgGenImage get arrowUp => const SvgGenImage('assets/icons/arrow-up.svg');
+
+  /// File path: assets/icons/check.svg
+  SvgGenImage get check => const SvgGenImage('assets/icons/check.svg');
+
   /// File path: assets/icons/circle-close-light.svg
   SvgGenImage get circleCloseLight =>
       const SvgGenImage('assets/icons/circle-close-light.svg');
+
+  /// File path: assets/icons/circle.svg
+  SvgGenImage get circle => const SvgGenImage('assets/icons/circle.svg');
 
   /// File path: assets/icons/cirlce-close.svg
   SvgGenImage get cirlceClose =>
@@ -51,6 +60,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/discs.svg
   SvgGenImage get discs => const SvgGenImage('assets/icons/discs.svg');
+
+  /// File path: assets/icons/dot-filled.svg
+  SvgGenImage get dotFilled => const SvgGenImage('assets/icons/dot-filled.svg');
 
   /// File path: assets/icons/filters.svg
   SvgGenImage get filters => const SvgGenImage('assets/icons/filters.svg');
@@ -88,6 +100,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pencil.svg
   SvgGenImage get pencil => const SvgGenImage('assets/icons/pencil.svg');
 
+  /// File path: assets/icons/pin-filled.svg
+  SvgGenImage get pinFilled => const SvgGenImage('assets/icons/pin-filled.svg');
+
   /// File path: assets/icons/pin.svg
   SvgGenImage get pin => const SvgGenImage('assets/icons/pin.svg');
 
@@ -112,12 +127,16 @@ class $AssetsIconsGen {
     arrowLeftDark,
     arrowLeft,
     arrowRight,
+    arrowUp,
+    check,
     circleCloseLight,
+    circle,
     cirlceClose,
     close,
     compass,
     connectionOffline,
     discs,
+    dotFilled,
     filters,
     folder,
     heartSelected,
@@ -129,6 +148,7 @@ class $AssetsIconsGen {
     notification,
     parameters,
     pencil,
+    pinFilled,
     pin,
     plus,
     search,

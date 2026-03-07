@@ -6,6 +6,7 @@ import 'package:place_see_app/core/api/auth_api.dart';
 import 'package:place_see_app/core/api/category_api.dart';
 import 'package:place_see_app/core/api/favorite_places_api.dart';
 import 'package:place_see_app/core/api/places_api.dart';
+import 'package:place_see_app/core/api/route_api.dart';
 import 'package:place_see_app/core/api/tag_api.dart';
 import 'package:place_see_app/core/api/user_location_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
@@ -24,6 +25,8 @@ import 'package:place_see_app/features/main_screens/categories/service/category_
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
 import 'package:place_see_app/features/main_screens/filters/service/filters_service.dart';
 import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
+import 'package:place_see_app/features/main_screens/maps/service/maps_service.dart';
+import 'package:place_see_app/features/main_screens/maps/view_model/maps_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/view_model/place_view_model.dart';
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
@@ -40,6 +43,7 @@ import 'package:place_see_app/ui/navigator/navigator_service.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/theme/theme.dart';
 import 'package:place_see_app/ui/widget/main_scaffold_with_nav_bar.dart';
+import 'package:place_see_app/ui/widget/nav_bar/map_data_provider.dart';
 import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -124,6 +128,10 @@ class MyApp extends StatelessWidget {
             (_, dioClient, _) => TagApi(dioClient.dio),
         ),
 
+        ProxyProvider<DioClient, RouteApi>(update:
+            (_, dioClient, _) => RouteApi(dioClient.dio),
+        ),
+
         ProxyProvider2<PlacesApi, FavoritePlacesApi, PlacesService>(update:
             (_, placesApi, favPlacesApi, _) => PlacesService(placesApi, favPlacesApi),
         ),
@@ -164,6 +172,10 @@ class MyApp extends StatelessWidget {
         ProxyProvider2<PlacesApi, FavoritePlacesApi, PlaceService>(update:
             (_, placesApi, favoritePlacesApi, _) =>
             PlaceService(favoritePlacesApi, placesApi),
+        ),
+
+        ProxyProvider2<RouteApi, PlacesApi, MapsService>(update:
+            (_, routeApi, placesApi, _) => MapsService(routeApi, placesApi),
         ),
 
         ChangeNotifierProxyProvider2<OnboardingService, NavigatorService, OnboardingViewModel>(
@@ -230,9 +242,22 @@ class MyApp extends StatelessWidget {
           },
         ),
 
+        ChangeNotifierProxyProvider3<MapsService, LocationTrackingManager, LocationService, MapsViewModel>(
+          create: (_) => MapsViewModel(),
+          update: (_, mapsService, locationTrackingManager, locationService, previous) {
+            previous!.update(mapsService, locationTrackingManager, locationService);
+            previous.initLocationListener();
+            return previous;
+          },
+        ),
+
         ChangeNotifierProvider(
           create: (_) => NavBarProvider(),
           child: const MainScaffoldWithNavBar(),
+        ),
+
+        ChangeNotifierProvider(
+            create: (_) => MapDataProvider(),
         ),
       ],
       child: const AppRoot(),
@@ -247,6 +272,7 @@ class AppRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     final authState = context.watch<AuthState>();
     final navigation = context.read<NavigatorService>();
+    final authStateCoordinator = context.read<AuthStateCoordinator>();
 
     return MaterialApp(
       navigatorKey: navigation.navigatorKey,
