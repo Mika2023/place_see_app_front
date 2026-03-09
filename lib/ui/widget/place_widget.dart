@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:place_see_app/core/model/place/place_card.dart';
+import 'package:place_see_app/features/main_screens/favorite_places/view_model/favorite_places_view_model.dart';
 import 'package:place_see_app/ui/widget/stateful/pressable_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../gen/assets.gen.dart';
 import '../theme/app_typography.dart';
@@ -25,7 +27,7 @@ class PlaceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isFav = placeCard.isFavorite?? false;
+    final isFav = context.watch<FavoritePlacesViewModel>().hasFavoriteInList(placeCard.id);
 
     return PressableWidget(
         onPressed: onTap,

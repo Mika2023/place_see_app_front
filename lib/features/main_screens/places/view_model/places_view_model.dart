@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:place_see_app/core/model/filters/places_filters_state.dart';
 import 'package:place_see_app/core/model/place/place_card.dart';
+import 'package:place_see_app/features/main_screens/favorite_places/view_model/favorite_places_view_model.dart';
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
 
 class PlacesViewModel extends ChangeNotifier {
   PlacesService? _placesService;
+  FavoritePlacesViewModel? _favoritePlacesViewModel;
   bool _isLoading = false;
   bool _isSearching = false;
   bool _isFiltering = false;
@@ -25,8 +27,9 @@ class PlacesViewModel extends ChangeNotifier {
   bool showSuggestions = false;
   PlacesFiltersState filtersState = PlacesFiltersState();
 
-  void update(PlacesService service) {
+  void update(PlacesService service, FavoritePlacesViewModel favPlacesVM) {
     _placesService = service;
+    _favoritePlacesViewModel = favPlacesVM;
     notifyListeners();
   }
 
@@ -56,6 +59,15 @@ class PlacesViewModel extends ChangeNotifier {
         isFavorite: !(placesList[index].isFavorite ?? false),
       );
       await _placesService?.toggleFavorite(placeId);
+
+      final place = placesList[index];
+      final isFavNew = place.isFavorite ?? false;
+      final hasFavInList = _favoritePlacesViewModel?.hasFavoriteInList(placeId) ?? false;
+      if (isFavNew) {
+        if (!hasFavInList) _favoritePlacesViewModel?.addFavorite(place);
+      } else {
+        if (hasFavInList) _favoritePlacesViewModel?.removeFavoriteFromList(placeId);
+      }
     } catch (e) {
       error = e.toString();
 

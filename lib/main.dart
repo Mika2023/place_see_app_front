@@ -23,6 +23,8 @@ import 'package:place_see_app/features/auth/view_model/registration_view_model.d
 import 'package:place_see_app/features/main_screens/categories/screen/categories_screen.dart';
 import 'package:place_see_app/features/main_screens/categories/service/category_service.dart';
 import 'package:place_see_app/features/main_screens/categories/view_model/categories_view_model.dart';
+import 'package:place_see_app/features/main_screens/favorite_places/service/favorite_places_service.dart';
+import 'package:place_see_app/features/main_screens/favorite_places/view_model/favorite_places_view_model.dart';
 import 'package:place_see_app/features/main_screens/filters/service/filters_service.dart';
 import 'package:place_see_app/features/main_screens/filters/view_model/filters_view_model.dart';
 import 'package:place_see_app/features/main_screens/maps/service/maps_service.dart';
@@ -174,6 +176,11 @@ class MyApp extends StatelessWidget {
             PlaceService(favoritePlacesApi, placesApi),
         ),
 
+        ProxyProvider<FavoritePlacesApi, FavoritePlacesService>(update:
+            (_, favoritePlacesApi, _) =>
+            FavoritePlacesService(favoritePlacesApi),
+        ),
+
         ProxyProvider2<RouteApi, PlacesApi, MapsService>(update:
             (_, routeApi, placesApi, _) => MapsService(routeApi, placesApi),
         ),
@@ -226,18 +233,26 @@ class MyApp extends StatelessWidget {
           },
         ),
 
-        ChangeNotifierProxyProvider<PlacesService, PlacesViewModel>(
-          create: (_) => PlacesViewModel(),
-          update: (_, placesService, previous) {
-            previous!.update(placesService);
+        ChangeNotifierProxyProvider<FavoritePlacesService, FavoritePlacesViewModel>(
+          create: (_) => FavoritePlacesViewModel(),
+          update: (_, favPlaceService, previous) {
+            previous!.update(favPlaceService);
             return previous;
           },
         ),
 
-        ChangeNotifierProxyProvider<PlaceService, PlaceViewModel>(
+        ChangeNotifierProxyProvider2<PlacesService, FavoritePlacesViewModel, PlacesViewModel>(
+          create: (_) => PlacesViewModel(),
+          update: (_, placesService, favPlacesVm, previous) {
+            previous!.update(placesService, favPlacesVm);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider2<PlaceService, FavoritePlacesViewModel, PlaceViewModel>(
           create: (_) => PlaceViewModel(),
-          update: (_, placeService, previous) {
-            previous!.update(placeService);
+          update: (_, placeService, favPlacesVm, previous) {
+            previous!.update(placeService, favPlacesVm);
             return previous;
           },
         ),
