@@ -202,7 +202,7 @@ class _PlaceScreenState extends State<PlaceScreen> {
 
                                     SizedBox(
                                       height: 190,
-                                      child: PlaceUserPhotos(photos: vm.userPhotos),
+                                      child: PlaceUserPhotos(photos: vm.userPhotos, isAddButtonNeeded: false,),
                                     ),
 
                                     const SizedBox(height: 20,),

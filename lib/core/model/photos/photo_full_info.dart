@@ -10,8 +10,9 @@ class PhotoFullInfo {
   final String imageUrl;
   final DateTime? createdAt;
   final bool isMain;
+  final String? placeName;
 
-  PhotoFullInfo(this.id, this.placeId, this.userName, this.imageUrl, this.createdAt, this.isMain);
+  PhotoFullInfo(this.id, this.placeId, this.userName, this.imageUrl, this.createdAt, this.isMain, this.placeName);
 
   factory PhotoFullInfo.fromJson(Map<String, dynamic> rawPhoto) => _$PhotoFullInfoFromJson(rawPhoto);
 }

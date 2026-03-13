@@ -10,12 +10,13 @@ class AppTextButton extends StatelessWidget {
   final TextStyle? style;
   final TextOverflow? overflow;
   final int? maxLines;
+  final Widget? postfixIcon;
 
   const AppTextButton({
     super.key,
     required this.textOnButton,
     required this.onPressed,
-    this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines,
+    this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines, this.postfixIcon,
   });
 
   @override
@@ -30,12 +31,22 @@ class AppTextButton extends StatelessWidget {
             isDisabled ? AppColors.secondary : AppColors.disabledDark
         ),
       ),
-      child: Text(
-          textOnButton,
-        textAlign: TextAlign.center,
-        style: style,
-        overflow: overflow,
-        maxLines: maxLines,
+      child: Row(
+        children: [
+          Text(
+            textOnButton,
+            textAlign: TextAlign.center,
+            style: style,
+            overflow: overflow,
+            maxLines: maxLines,
+          ),
+
+          if (postfixIcon != null) ...[
+            const SizedBox(width: 6,),
+
+            postfixIcon!
+          ]
+        ],
       ),
     );
   }

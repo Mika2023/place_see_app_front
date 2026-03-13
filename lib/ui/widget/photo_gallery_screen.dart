@@ -135,7 +135,7 @@ class _PhotoGalleryScreenState extends State<PhotoGalleryScreen> with SingleTick
                 bottom: 30,
                 child: Opacity(
                     opacity: opacity,
-                  child: PhotoInfo(photo: photo),
+                  child: PhotoInfo(createdAt: photo.createdAt, userName: photo.userName, placeName: photo.placeName,),
                 )
             ),
 

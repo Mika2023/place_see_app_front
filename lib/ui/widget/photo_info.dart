@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:place_see_app/core/model/photos/photo_full_info.dart';
 import 'package:intl/intl.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 import 'package:place_see_app/ui/theme/app_typography.dart';
 
 class PhotoInfo extends StatelessWidget {
-  final PhotoFullInfo photo;
+  final DateTime? createdAt;
+  final String? userName;
+  final String? placeName;
 
-  const PhotoInfo({super.key, required this.photo});
+  const PhotoInfo({super.key, this.createdAt, required this.userName, this.placeName});
 
   @override
   Widget build(BuildContext context) {
-    final date = photo.createdAt != null ? DateFormat('dd.MM.yyyy').format(photo.createdAt!) : '';
+    final date = createdAt != null ? DateFormat('dd.MM.yyyy').format(createdAt!) : '';
 
     return AnimatedOpacity(
         opacity: 1,
@@ -21,13 +22,21 @@ class PhotoInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              photo.userName,
+              userName ?? 'Путешественник',
             style: AppTypography.subTextLight.copyWith(
               color: AppColors.additionalOne
             ),
           ),
 
           if (date.isNotEmpty)
+            Text(
+              date,
+              style: AppTypography.subTextLight.copyWith(
+                  color: AppColors.additionalOne
+              ),
+            ),
+
+          if (placeName != null)
             Text(
               date,
               style: AppTypography.subTextLight.copyWith(

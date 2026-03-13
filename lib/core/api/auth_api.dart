@@ -28,8 +28,7 @@ class AuthApi {
 
   Future<Response> logout(String? refreshToken) {
     return dio.delete(
-      '/auth/logout',
-      data: {'refreshToken': refreshToken},
+      '/auth/logout?refreshToken=$refreshToken',
     );
   }
 

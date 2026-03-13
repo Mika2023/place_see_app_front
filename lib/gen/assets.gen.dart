@@ -87,6 +87,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/img.png
   AssetGenImage get img => const AssetGenImage('assets/icons/img.png');
 
+  /// File path: assets/icons/logout.svg
+  SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');
+
   /// File path: assets/icons/menu.svg
   SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
 
@@ -148,6 +151,7 @@ class $AssetsIconsGen {
     heart,
     home,
     img,
+    logout,
     menu,
     noData,
     notification,

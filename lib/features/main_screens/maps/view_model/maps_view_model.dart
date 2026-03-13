@@ -58,6 +58,17 @@ class MapsViewModel extends ChangeNotifier {
     return formatDistance(_remainingDistance.toInt());
   }
 
+  void setRoute(RouteModel anotherRoute) {
+    route = anotherRoute;
+    isEmptyRouteNormal = false;
+    isError = false;
+    _remainingDistance = 0;
+    remainingRoute = [];
+    isRouteCompleted = false;
+    wasEdited = false;
+    notifyListeners();
+  }
+
   String formatDistance(int distance) {
     int km = distance ~/ 1000;
     int m = distance % 1000;

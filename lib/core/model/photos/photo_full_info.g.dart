@@ -16,6 +16,7 @@ PhotoFullInfo _$PhotoFullInfoFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['createdAt'] as String),
       json['isMain'] as bool,
+      json['placeName'] as String?,
     );
 
 Map<String, dynamic> _$PhotoFullInfoToJson(PhotoFullInfo instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$PhotoFullInfoToJson(PhotoFullInfo instance) =>
       'imageUrl': instance.imageUrl,
       'createdAt': instance.createdAt?.toIso8601String(),
       'isMain': instance.isMain,
+      'placeName': instance.placeName,
     };
