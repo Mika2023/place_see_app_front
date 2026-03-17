@@ -274,19 +274,19 @@ class MyApp extends StatelessWidget {
           },
         ),
 
-        ChangeNotifierProxyProvider3<MapsService, LocationTrackingManager, LocationService, MapsViewModel>(
-          create: (_) => MapsViewModel(),
-          update: (_, mapsService, locationTrackingManager, locationService, previous) {
-            previous!.update(mapsService, locationTrackingManager, locationService);
-            previous.initLocationListener();
-            return previous;
-          },
-        ),
-
         ChangeNotifierProxyProvider<ProfileService, ProfileViewModel>(
           create: (_) => ProfileViewModel(),
           update: (_, profileService, previous) {
             previous!.update(profileService);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider4<MapsService, LocationTrackingManager, LocationService, ProfileViewModel, MapsViewModel>(
+          create: (_) => MapsViewModel(),
+          update: (_, mapsService, locationTrackingManager, locationService, profileVm, previous) {
+            previous!.update(mapsService, locationTrackingManager, locationService, profileVm);
+            previous.initLocationListener();
             return previous;
           },
         ),

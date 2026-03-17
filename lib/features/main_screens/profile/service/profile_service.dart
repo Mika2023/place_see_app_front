@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:place_see_app/core/api/photo_api.dart';
 import 'package:place_see_app/core/api/places_api.dart';
@@ -7,6 +9,7 @@ import 'package:place_see_app/core/model/photos/photo_profile_info.dart';
 import 'package:place_see_app/core/model/routes/route_model.dart';
 import 'package:place_see_app/core/model/routes/route_profile_info.dart';
 import 'package:place_see_app/core/model/user/user_profile_info.dart';
+import 'package:place_see_app/core/utils/file_service.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
 
 import '../../../../core/model/place/place_short_for_search.dart';
@@ -41,8 +44,8 @@ class ProfileService {
 
     if (rawRoutes.isEmpty) return [];
 
-    return rawRoutes.map((rawPhoto) {
-      return RouteProfileInfo.fromJson(rawPhoto);
+    return rawRoutes.map((rawRoute) {
+      return RouteProfileInfo.fromJson(rawRoute);
     }).toList();
   }
 
@@ -63,7 +66,9 @@ class ProfileService {
   }
 
   Future<PhotoProfileInfo> uploadPhoto(int placeId, XFile image) async {
-    final rawPhoto = await photoApi.createPhoto(placeId, image);
+    final finalImage = (await FileService.compressImage(image)) ?? File(image.path);
+
+    final rawPhoto = await photoApi.createPhoto(placeId, finalImage);
 
     if (rawPhoto.isEmpty) throw Exception('Ответ от апи пришел пустой!');
 

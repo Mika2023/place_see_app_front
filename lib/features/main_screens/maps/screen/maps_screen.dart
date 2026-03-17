@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:place_see_app/core/mapper/routes/route_model_mapper.dart';
 import 'package:place_see_app/core/model/place/place_short_for_search.dart';
+import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
 import 'package:place_see_app/ui/widget/app_text_button.dart';
 import 'package:place_see_app/ui/widget/nav_bar/map_data_provider.dart';
 import 'package:place_see_app/ui/widget/search_places_sheet.dart';
@@ -60,6 +62,23 @@ class _MapsScreenState extends State<MapsScreen> {
     }
   }
 
+  String _buildFromPlaceName() {
+    final vm = context.read<MapsViewModel>();
+
+    if (vm.isFromProfile) return vm.getFirstPlaceNameFromProfile() ?? 'Ваше местоположение';
+    return _fromPlace ?? 'Ваше местоположение';
+  }
+
+  String _buildToPlaceName() {
+    final vm = context.read<MapsViewModel>();
+
+    if (vm.isFromProfile) return vm.getLastPlaceNameFromProfile() ?? 'Не определено';
+    if (vm.wasEdited) {
+      return _toPlace?? 'Не определено';
+    }
+    return _lastPlaceName ?? 'Не определено';
+  }
+
   void _openSearchSheet(bool isStartPlace) async {
     final animationController = AnimationController(
         vsync: Navigator.of(context),
@@ -74,7 +93,7 @@ class _MapsScreenState extends State<MapsScreen> {
         transitionAnimationController: animationController,
         builder: (_) => SearchPlacesSheet(
             initialPlace: isStartPlace ? null :
-            PlaceShortForSearch(id: _lastPlaceId!, name: _lastPlaceName!),
+            PlaceShortForSearch(id: _lastPlaceId ?? 0, name: _lastPlaceName ?? ''),
             placesForSearch: vm!.placesForSearch,
             onApply: (newPlace) {
               vm?.editRoute(isStartPlace, newPlace.id);
@@ -205,7 +224,7 @@ class _MapsScreenState extends State<MapsScreen> {
             children: [
               Expanded(
                 child: Text(
-                  _fromPlace ?? 'Ваше местоположение',
+                  _buildFromPlaceName(),
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -226,7 +245,7 @@ class _MapsScreenState extends State<MapsScreen> {
               ),
               Expanded(
                 child: Text(
-                  vm!.wasEdited ? (_toPlace?? 'Не определено') : (_lastPlaceName ?? 'Не определено'),
+                  _buildToPlaceName(),
                   style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.end,
                   maxLines: 1,
@@ -274,7 +293,7 @@ class _MapsScreenState extends State<MapsScreen> {
             children: [
               Expanded(
                 child: Text(
-                    _fromPlace ?? 'Ваше местоположение',
+                    _buildFromPlaceName(),
                     style: Theme.of(context).textTheme.bodySmall,
                     overflow: TextOverflow.ellipsis,
                   )
@@ -295,7 +314,7 @@ class _MapsScreenState extends State<MapsScreen> {
               ),
               Expanded(
                 child: Text(
-                  vm!.wasEdited ? (_toPlace?? 'Не определено') : (_lastPlaceName ?? 'Не определено'),
+                  _buildToPlaceName(),
                   style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.end,
                   maxLines: 1,
@@ -353,7 +372,7 @@ class _MapsScreenState extends State<MapsScreen> {
           children: [
             Expanded(
                 child: AppTextButton(
-                    textOnButton: _fromPlace ?? 'Ваше местоположение',
+                    textOnButton: _buildFromPlaceName(),
                     onPressed: () => _openSearchSheet(true),
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
@@ -375,7 +394,7 @@ class _MapsScreenState extends State<MapsScreen> {
             ),
             Expanded(
                 child: AppTextButton(
-                    textOnButton: vm!.wasEdited ? (_toPlace?? 'Не определено') : (_lastPlaceName ?? 'Не определено'),
+                    textOnButton: _buildToPlaceName(),
                     onPressed: () => _openSearchSheet(false),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

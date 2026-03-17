@@ -15,7 +15,7 @@ class RoutesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 190,
-      width: 190,
+      width: double.infinity,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (_, _) => const SizedBox(width: 8,),

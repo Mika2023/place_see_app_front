@@ -38,7 +38,7 @@ class PhotoInfo extends StatelessWidget {
 
           if (placeName != null)
             Text(
-              date,
+              placeName!,
               style: AppTypography.subTextLight.copyWith(
                   color: AppColors.additionalOne
               ),

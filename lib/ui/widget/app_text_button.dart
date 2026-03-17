@@ -19,6 +19,33 @@ class AppTextButton extends StatelessWidget {
     this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines, this.postfixIcon,
   });
 
+  Widget _buildBody() {
+    if (postfixIcon != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            textOnButton,
+            textAlign: TextAlign.center,
+            style: style,
+            overflow: overflow,
+            maxLines: maxLines,
+          ),
+          const SizedBox(width: 6,),
+          postfixIcon!
+        ],
+      );
+    }
+
+    return Text(
+      textOnButton,
+      textAlign: TextAlign.center,
+      style: style,
+      overflow: overflow,
+      maxLines: maxLines,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDisabled = state == AppButtonState.loading || state == AppButtonState.disabled;
@@ -31,23 +58,7 @@ class AppTextButton extends StatelessWidget {
             isDisabled ? AppColors.secondary : AppColors.disabledDark
         ),
       ),
-      child: Row(
-        children: [
-          Text(
-            textOnButton,
-            textAlign: TextAlign.center,
-            style: style,
-            overflow: overflow,
-            maxLines: maxLines,
-          ),
-
-          if (postfixIcon != null) ...[
-            const SizedBox(width: 6,),
-
-            postfixIcon!
-          ]
-        ],
-      ),
+      child:  _buildBody(),
     );
   }
 }

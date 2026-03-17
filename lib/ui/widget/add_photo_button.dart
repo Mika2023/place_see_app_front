@@ -16,6 +16,7 @@ class AddPhotoButton extends StatelessWidget {
       child: Container(
         width: 190,
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
           color: AppColors.additionalOne
         ),
         child: Center(

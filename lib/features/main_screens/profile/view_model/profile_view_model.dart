@@ -118,7 +118,7 @@ class ProfileViewModel extends ChangeNotifier{
     return Point(latitude: centerLat, longitude: centerLon);
   }
 
-  double _getZoom(List<Point> path) {
+  int _getZoom(List<Point> path) {
     final minLat = path.map((p) => p.latitude).reduce((a,b) => min(a, b));
     final maxLat = path.map((p) => p.latitude).reduce((a,b) => max(a, b));
     final minLon = path.map((p) => p.longitude).reduce((a,b) => min(a, b));
@@ -128,9 +128,9 @@ class ProfileViewModel extends ChangeNotifier{
     final lonDiff = maxLon - minLon;
     final maxDiff = max(latDiff, lonDiff);
 
-    if (maxDiff < 0.005) return 16;
-    if (maxDiff < 0.02) return 15;
-    if (maxDiff < 0.05) return 14;
+    if (maxDiff < 0.005) return 13;
+    if (maxDiff < 0.02) return 12;
+    if (maxDiff < 0.05) return 11;
 
     return 10;
   }
@@ -164,7 +164,11 @@ class ProfileViewModel extends ChangeNotifier{
     notifyListeners();
 
     try {
-      final uploadedPhoto = await profileService?.uploadPhoto(place.id, image);
+      var uploadedPhoto = await profileService?.uploadPhoto(place.id, image);
+      uploadedPhoto = uploadedPhoto?.copyWith(
+        userName: userProfileInfo?.nickname,
+        createdAt: DateTime.now()
+      );
 
       final index = photos.indexOf(tempPhoto);
       if (index != -1 && uploadedPhoto != null) {
@@ -172,12 +176,37 @@ class ProfileViewModel extends ChangeNotifier{
       }
     } catch (e) {
         photos.remove(tempPhoto);
+        throw Exception("Ошибка при загрузке фото");
     } finally {
       notifyListeners();
     }
   }
 
   PhotoProfileInfo _buildTempPhoto(XFile image, PlaceShortForSearch place) {
-    return PhotoProfileInfo(id: DateTime.now().millisecondsSinceEpoch, imageUrl: image.path, place: place);
+    return PhotoProfileInfo(
+        id: DateTime.now().millisecondsSinceEpoch,
+        imageUrl: image.path,
+        place: place,
+        userName: userProfileInfo?.nickname,
+        createdAt: DateTime.now()
+    );
+  }
+  
+  bool hasRouteInList(int routeId) {
+    return routes.any((route) => route.id==routeId);
+  }
+  
+  void addRoute(RouteProfileInfo route) {
+    if (hasRouteInList(route.id)) return;
+    routes.add(route);
+    notifyListeners();
+  }
+
+  void editRoute(RouteProfileInfo newRoute) {
+    final index = routes.indexWhere((route) => route.id == newRoute.id);
+    if (index == -1) return;
+
+    routes[index] = newRoute;
+    notifyListeners();
   }
 }

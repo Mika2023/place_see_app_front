@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
 
@@ -13,5 +14,23 @@ class PermissionService {
     }
 
     return false;
+  }
+
+  static Future<PermissionStatus> checkGalleryPermission() async {
+    final status = await Permission.photos.status;
+
+    if (status.isGranted || status.isLimited) {
+      return PermissionStatus.granted;
+    }
+
+    if (status.isDenied) {
+      return await Permission.photos.request();
+    }
+
+    if (status.isPermanentlyDenied) {
+      return PermissionStatus.permanentlyDenied;
+    }
+
+    return PermissionStatus.denied;
   }
 }

@@ -1,6 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:place_see_app/features/main_screens/maps/view_model/maps_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/screen/widgets/place_user_photos.dart';
@@ -61,41 +59,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Assets.icons.pin.svg(
-              width: 43,
-              height: 43
+              width: 40,
+              height: 40
             ),
             const SizedBox(width: 6,),
             Text(
                 'Мои путешествия',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontSize: 30
+              ),
             )
           ],
         ),
 
-        const SizedBox(height: 12,),
+        const SizedBox(height: 14,),
 
         if (vm.routes.isEmpty && !vm.isLoading && !vm.isError) ...[
           PlaceholderWithIconWidget(
               icon: Assets.icons.compass.svg(
-                width: 43,
-                height: 43
+                width: 40,
+                height: 40
               ),
-              text: "Сохраненных маршрутов пока что нет.\nВремя отправиться в путешествие!",
+              text: "Сохраненных маршрутов пока нет.\nВремя отправиться в путешествие!",
           ),
         ] else ...[
           RoutesWidget(
               routes: vm.routes,
               buildUrl: vm.buildUrlForRouteImg,
               onPressedRoute: (routeId) async {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => const Center(child: CircularProgressIndicator()),
-                );
 
                 final route = await vm.getRouteById(routeId);
-
-                Navigator.pop(context);
 
                 if (route == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -110,24 +103,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
 
-        const SizedBox(height: 55,),
+        const SizedBox(height: 40,),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Assets.icons.folder.svg(
-                width: 43,
-                height: 43
+                width: 35,
+                height: 35
             ),
             const SizedBox(width: 6,),
             Text(
               'Моя галерея',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontSize: 30
+              ),
             )
           ],
         ),
 
-        const SizedBox(height: 12,),
+        const SizedBox(height: 14,),
 
         PlaceUserPhotos(
             photos: vm.photoFullInfo,
@@ -139,49 +134,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _whileLoading() {
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: SafeArea(
-                    child: PlaceholderWithIconWidget(
-                      icon: Assets.icons.timeClock.svg(
-                        width: 82,
-                        height: 82,
-                      ),
-                      text: 'Сейчас появятся информация о профиле',
-                      padding: const EdgeInsets.symmetric(horizontal: 22),
-                    ),
-                  ),
-                ),
-              )
-          );
-        }
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.55,
+      child: Center(
+        child: PlaceholderWithIconWidget(
+          icon: Assets.icons.timeClock.svg(
+            width: 82,
+            height: 82,
+          ),
+          text: 'Сейчас появятся информация о профиле',
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+        ),
+      ),
     );
   }
 
   Widget _onError(String text, Widget icon) {
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: SafeArea(
-                      child: PlaceholderWithIconWidget(
-                        icon: icon,
-                        text: text,
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                      )
-                  ),
-                ),
-              )
-          );
-        }
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.55,
+      child: Center(
+        child: PlaceholderWithIconWidget(
+              icon: icon,
+              text: text,
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+            )
+      ),
     );
   }
 
@@ -210,68 +187,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SafeArea(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Center(
-                        child: CircleAvatar(
-                          radius: 105,
-                          backgroundImage: CachedNetworkImageProvider(
-                              vm.userProfileInfo?.avatarImageUrl ??
-                                  'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg'
+                  child: SizedBox(
+                    height: 230,
+                    child:  Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: CircleAvatar(
+                            radius: 105,
+                            backgroundImage: CachedNetworkImageProvider(
+                                vm.userProfileInfo?.avatarImageUrl ??
+                                    'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg'
+                            ),
+
                           ),
-
                         ),
-                      ),
 
-                      Positioned(
-                        right: 20,
-                        bottom: 30,
-                        child: PopupMenuButton<String>(
-                            icon: Assets.icons.setting.svg(
-                                height: 40,
-                                width: 40
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)
-                            ),
-                            onSelected: (value) {
-                              if (value == 'logout') {
-                                vm.logout();
-                              }
-                            },
-                            color: AppColors.primary,
-                            elevation: 8,
-                            shadowColor: AppColors.blackForShadow.withValues(alpha: 0.6),
-                            itemBuilder: (context) =>
-                            [
-                              PopupMenuItem(
-                                  value: 'logout',
-                                  child: Row(
-                                    children: [
-                                      Assets.icons.logout.svg(
-                                          width: 30,
-                                          height: 30
-                                      ),
-                                      const SizedBox(width: 5,),
-                                      Text(
-                                        'Выход',
-                                        style: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                      )
-                                    ],
-                                  )
-                              )
-                            ]
-                        ),
-                      )
-                    ],
+                        Positioned(
+                          right: 16,
+                          bottom: 5,
+                          child: PopupMenuButton<String>(
+                              icon: Assets.icons.setting.svg(
+                                  height: 37,
+                                  width: 37
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)
+                              ),
+                              onSelected: (value) {
+                                if (value == 'logout') {
+                                  vm.logout();
+                                }
+                              },
+                              color: AppColors.primary,
+                              elevation: 8,
+                              shadowColor: AppColors.blackForShadow.withValues(alpha: 0.6),
+                              itemBuilder: (context) =>
+                              [
+                                PopupMenuItem(
+                                    value: 'logout',
+                                    child: Row(
+                                      children: [
+                                        Assets.icons.logout.svg(
+                                            width: 28,
+                                            height: 28
+                                        ),
+                                        const SizedBox(width: 5,),
+                                        Text(
+                                          'Выход',
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        )
+                                      ],
+                                    )
+                                )
+                              ]
+                          ),
+                        )
+                      ],
+                    ),
                   )
               ),
 
-              const SizedBox(height: 35,),
+              const SizedBox(height: 15,),
 
               ClipPath(
                 clipper: TopCircularBorder(),

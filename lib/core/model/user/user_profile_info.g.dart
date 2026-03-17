@@ -10,7 +10,7 @@ UserProfileInfo _$UserProfileInfoFromJson(Map<String, dynamic> json) =>
     UserProfileInfo(
       (json['id'] as num).toInt(),
       json['nickname'] as String,
-      json['avatarImageUrl'] as String,
+      json['avatarImageUrl'] as String?,
       json['email'] as String?,
     );
 

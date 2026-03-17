@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 
 class PhotoApi {
   final Dio dio;
@@ -27,15 +30,20 @@ class PhotoApi {
     }
   }
 
-  Future<Map<String, dynamic>> createPhoto(int placeId, XFile file) async {
+  Future<Map<String, dynamic>> createPhoto(int placeId, File file) async {
+    final requestJson = jsonEncode({
+      "placeId": placeId,
+      "isMain": false,
+    });
+
     final formData = FormData.fromMap({
-      "request": {
-        "placeId": placeId,
-        "isMain": false,
-      },
+      "request": MultipartFile.fromString(
+          requestJson,
+          contentType: MediaType("application", "json")
+      ),
       "image": await MultipartFile.fromFile(
         file.path,
-        filename: file.name
+        filename: file.path.split("/").last
       ),
     });
 

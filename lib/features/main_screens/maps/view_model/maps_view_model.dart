@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:place_see_app/core/location/location_tracking_manager.dart';
+import 'package:place_see_app/core/mapper/routes/route_model_mapper.dart';
 import 'package:place_see_app/core/model/place/place_short_for_search.dart';
 import 'package:place_see_app/core/model/routes/route_model.dart';
 import 'package:place_see_app/core/model/routes/route_transport_type_enum.dart';
 import 'package:place_see_app/core/utils/point_utils.dart';
 import 'package:place_see_app/features/main_screens/maps/service/maps_service.dart';
+import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
 
 import '../../../../core/location/location_service.dart';
 
@@ -16,12 +18,14 @@ class MapsViewModel extends ChangeNotifier {
   MapsService? mapsService;
   LocationTrackingManager? locationTrackingManager;
   LocationService? locationService;
+  ProfileViewModel? profileViewModel;
   RouteModel? route;
   bool isLoading = false;
   bool isError = false;
   bool isEmptyRouteNormal = true;
   bool isNavigationMode = false;
   bool isRouteCompleted = false;
+  bool isFromProfile = false;
   bool wasEdited = false;
   LatLng? userPosition;
   List<LatLng> remainingRoute = [];
@@ -66,6 +70,7 @@ class MapsViewModel extends ChangeNotifier {
     remainingRoute = [];
     isRouteCompleted = false;
     wasEdited = false;
+    isFromProfile = true;
     notifyListeners();
   }
 
@@ -77,10 +82,11 @@ class MapsViewModel extends ChangeNotifier {
     return '$m м';
   }
 
-  void update(MapsService service, LocationTrackingManager manager, LocationService location) {
+  void update(MapsService service, LocationTrackingManager manager, LocationService location, ProfileViewModel profileVm) {
     mapsService = service;
     locationTrackingManager = manager;
     locationService = location;
+    profileViewModel = profileVm;
   }
 
   void initLocationListener() async {
@@ -131,11 +137,14 @@ class MapsViewModel extends ChangeNotifier {
       route = null;
       isRouteCompleted = false;
       wasEdited = false;
+      isFromProfile = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         notifyListeners();
       });
 
       route = (await mapsService?.createAndGetRoute(toPlaceId, RouteTransportTypeEnum.walking))!;
+      final routeProfileInfo = route!.toProfileInfo();
+      profileViewModel?.addRoute(routeProfileInfo);
     } catch (e) {
       if (kDebugMode) print(e);
       isError = true;
@@ -166,12 +175,15 @@ class MapsViewModel extends ChangeNotifier {
       route = null;
       isRouteCompleted = false;
       wasEdited = true;
+      isFromProfile = false;
       notifyListeners();
 
       final fromPlaceId = isStartPlace ? placeId : null;
       final toPlaceId = isStartPlace ? null : placeId;
 
       route = (await mapsService?.editRoute(fromPlaceId, toPlaceId, routeId, RouteTransportTypeEnum.walking))!;
+      final routeProfileInfo = route!.toProfileInfo();
+      profileViewModel?.editRoute(routeProfileInfo);
     } catch (e) {
       if (kDebugMode) print(e);
       isError = true;
@@ -234,5 +246,29 @@ class MapsViewModel extends ChangeNotifier {
     }
 
     _remainingDistance = sum;
+  }
+
+  String? getFirstPlaceNameFromProfile() {
+    if (!isFromProfile || route == null || route!.name == null) return null;
+
+    final name = route!.name!;
+    if (name.contains("->")) {
+      final indexOfArrow = name.indexOf("->");
+      return name.substring(0, indexOfArrow);
+    }
+
+    return 'Ваше местоположение';
+  }
+
+  String? getLastPlaceNameFromProfile() {
+    if (!isFromProfile || route == null || route!.name == null) return null;
+
+    final name = route!.name!;
+    if (name.contains("->")) {
+      final indexOfArrow = name.indexOf("->");
+      return name.substring(indexOfArrow + 2);
+    }
+
+    return 'Не определено';
   }
 }

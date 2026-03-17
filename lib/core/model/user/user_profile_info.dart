@@ -6,7 +6,7 @@ part 'user_profile_info.g.dart';
 class UserProfileInfo {
   final int id;
   final String nickname;
-  final String avatarImageUrl;
+  final String? avatarImageUrl;
   final String? email;
 
   UserProfileInfo(this.id, this.nickname, this.avatarImageUrl, this.email);
