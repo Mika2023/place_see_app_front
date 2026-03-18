@@ -1,15 +1,17 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_profile_info.g.dart';
+part 'user_profile_info.freezed.dart';
 
-@JsonSerializable()
-class UserProfileInfo {
-  final int id;
-  final String nickname;
-  final String? avatarImageUrl;
-  final String? email;
+@freezed
+class UserProfileInfo with _$UserProfileInfo {
+  const factory UserProfileInfo({
+    required int id,
+    required String nickname,
+    String? avatarImageUrl,
+    String? email
+  }) = _UserProfileInfo;
 
-  UserProfileInfo(this.id, this.nickname, this.avatarImageUrl, this.email);
-
-  factory UserProfileInfo.fromJson(Map<String, dynamic> rawUser) => _$UserProfileInfoFromJson(rawUser);
+  factory UserProfileInfo.fromJson(Map<String, dynamic> rawUser) =>
+      _$UserProfileInfoFromJson(rawUser);
 }

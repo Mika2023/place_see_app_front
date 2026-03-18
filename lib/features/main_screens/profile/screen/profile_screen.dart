@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:place_see_app/features/main_screens/maps/view_model/maps_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/screen/widgets/place_user_photos.dart';
+import 'package:place_see_app/features/main_screens/profile/screen/widgets/edit_profile_dialog.dart';
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/routes_widget.dart';
 import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
 import 'package:place_see_app/ui/widget/add_photo_dialog.dart';
@@ -33,6 +36,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       vm.loadPhotos();
       vm.preloadPlaces();
     });
+  }
+
+  ImageProvider _buildAvatarPhoto(String path) {
+    if (path.startsWith("http")) {
+      return CachedNetworkImageProvider(path,);
+    }
+
+    return FileImage(File(path));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -176,6 +187,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _openEditProfileDialog(BuildContext context) {
+    final vm = context.read<ProfileViewModel>();
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => EditProfileDialog(
+          onApply: vm.editUser,
+          initialNickname: vm.userProfileInfo?.nickname ?? '',
+          initialAvatar: vm.userProfileInfo?.avatarImageUrl ??
+              'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProfileViewModel>();
@@ -195,11 +222,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Center(
                           child: CircleAvatar(
                             radius: 105,
-                            backgroundImage: CachedNetworkImageProvider(
+                            backgroundImage: _buildAvatarPhoto(
                                 vm.userProfileInfo?.avatarImageUrl ??
-                                    'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg'
-                            ),
-
+                                'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg')
                           ),
                         ),
 
@@ -218,6 +243,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 if (value == 'logout') {
                                   vm.logout();
                                 }
+                                if (value == 'edit') {
+                                  _openEditProfileDialog(context);
+                                }
                               },
                               color: AppColors.primary,
                               elevation: 8,
@@ -235,6 +263,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         const SizedBox(width: 5,),
                                         Text(
                                           'Выход',
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        )
+                                      ],
+                                    )
+                                ),
+                                PopupMenuItem(
+                                    value: 'edit',
+                                    child: Row(
+                                      children: [
+                                        Assets.icons.pencil.svg(
+                                            width: 28,
+                                            height: 28
+                                        ),
+                                        const SizedBox(width: 5,),
+                                        Text(
+                                          'Редактировать',
                                           style: Theme
                                               .of(context)
                                               .textTheme

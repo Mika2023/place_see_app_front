@@ -75,6 +75,16 @@ class ProfileService {
     return PhotoProfileInfo.fromJson(rawPhoto);
   }
 
+  Future<UserProfileInfo> editProfile(String? newNickname, XFile? image) async {
+    final finalImage = image != null ? ((await FileService.compressImage(image)) ?? File(image.path)) : null;
+
+    final rawUser = await userApi.editUserProfileInfo(finalImage, newNickname);
+
+    if (rawUser.isEmpty) throw Exception('Ответ от апи пришел пустой!');
+
+    return UserProfileInfo.fromJson(rawUser);
+  }
+
   void logout() {
     authService.logout();
   }

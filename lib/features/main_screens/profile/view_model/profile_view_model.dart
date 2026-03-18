@@ -191,6 +191,26 @@ class ProfileViewModel extends ChangeNotifier{
         createdAt: DateTime.now()
     );
   }
+
+  Future<void> editUser(String? newNickname, XFile? image) async {
+    if (newNickname == null && image == null) return;
+
+    userProfileInfo = userProfileInfo?.copyWith(
+      avatarImageUrl: image?.path ?? userProfileInfo?.avatarImageUrl,
+      nickname: newNickname ?? userProfileInfo?.nickname ?? ''
+    );
+
+    try {
+      isError = false;
+      notifyListeners();
+
+      userProfileInfo = (await profileService?.editProfile(newNickname, image))!;
+    } catch (e) {
+      if (kDebugMode) print(e);
+    } finally {
+      notifyListeners();
+    }
+  }
   
   bool hasRouteInList(int routeId) {
     return routes.any((route) => route.id==routeId);

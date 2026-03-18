@@ -34,6 +34,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow-up.svg
   SvgGenImage get arrowUp => const SvgGenImage('assets/icons/arrow-up.svg');
 
+  /// File path: assets/icons/camera.svg
+  SvgGenImage get camera => const SvgGenImage('assets/icons/camera.svg');
+
   /// File path: assets/icons/check.svg
   SvgGenImage get check => const SvgGenImage('assets/icons/check.svg');
 
@@ -135,6 +138,7 @@ class $AssetsIconsGen {
     arrowLeft,
     arrowRight,
     arrowUp,
+    camera,
     check,
     circleCloseLight,
     circle,
