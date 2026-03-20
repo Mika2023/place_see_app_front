@@ -71,11 +71,11 @@ class LoginViewModel extends ChangeNotifier{
   }
 
   void goToRegistrationPage() {
-    _resetState();
-    navigatorService?.pushReplacement(const RegistrationScreen());
+    resetState();
+    authService?.setRegistration();
   }
 
-  void _resetState() {
+  void resetState() {
     _currentTextButtonState = AppButtonState.enabled;
     _currentCircleState = AppCircleState.normal;
     _currentFieldsState = AppInputState.normal;

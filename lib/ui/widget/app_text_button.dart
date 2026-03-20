@@ -11,12 +11,13 @@ class AppTextButton extends StatelessWidget {
   final TextOverflow? overflow;
   final int? maxLines;
   final Widget? postfixIcon;
+  final Widget? prefixIcon;
 
   const AppTextButton({
     super.key,
     required this.textOnButton,
     required this.onPressed,
-    this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines, this.postfixIcon,
+    this.state = AppButtonState.enabled, this.style, this.overflow, this.maxLines, this.postfixIcon, this.prefixIcon,
   });
 
   Widget _buildBody() {
@@ -33,6 +34,23 @@ class AppTextButton extends StatelessWidget {
           ),
           const SizedBox(width: 6,),
           postfixIcon!
+        ],
+      );
+    }
+
+    if (prefixIcon != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          prefixIcon!,
+          const SizedBox(width: 6,),
+          Text(
+            textOnButton,
+            textAlign: TextAlign.center,
+            style: style,
+            overflow: overflow,
+            maxLines: maxLines,
+          ),
         ],
       );
     }

@@ -5,6 +5,7 @@ enum AuthEnum {
   unauthenticated,
   unknown,
   afterRegistration,
+  registration
 }
 
 class AuthState extends ValueNotifier<AuthEnum>{
@@ -13,4 +14,5 @@ class AuthState extends ValueNotifier<AuthEnum>{
   void setAuthenticated() => value = AuthEnum.authenticated;
   void setUnauthenticated() => value = AuthEnum.unauthenticated;
   void setAfterRegistration() => value = AuthEnum.afterRegistration;
+  void setRegistration() => value = AuthEnum.registration;
 }

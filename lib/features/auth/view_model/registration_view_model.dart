@@ -84,7 +84,7 @@ class RegistrationViewModel extends ChangeNotifier{
 
   void goToLoginPage() {
     _resetState();
-    navigatorService?.pushReplacement(const LoginScreen());
+    authService?.setLogin();
   }
 
   void _resetState() {

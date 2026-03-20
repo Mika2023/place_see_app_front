@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,20 @@ import 'package:place_see_app/features/main_screens/place/screen/widgets/place_u
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/edit_profile_dialog.dart';
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/routes_widget.dart';
 import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
+import 'package:place_see_app/ui/enum/view_mode.dart';
+import 'package:place_see_app/ui/widget/add_photo_button.dart';
 import 'package:place_see_app/ui/widget/add_photo_dialog.dart';
+import 'package:place_see_app/ui/widget/app_text_button.dart';
 import 'package:place_see_app/ui/widget/decoration/top_circular_border.dart';
 import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../../../../ui/theme/app_colors.dart';
+import '../../../../ui/widget/photo_gallery_screen.dart';
 import '../../../../ui/widget/placeholder_with_icon_widget.dart';
+import '../../../../ui/widget/stateful/pressable_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -24,6 +31,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  ViewMode _routesViewMode = ViewMode.horizontal;
+  ViewMode _photosViewMode = ViewMode.horizontal;
 
   @override
   void initState() {
@@ -46,6 +55,210 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FileImage(File(path));
   }
 
+  Future<void> _onPressedRoute(
+      int routeId,
+      BuildContext context,
+      ProfileViewModel vm,
+      MapsViewModel routesVm,
+      NavBarProvider navigatorVm
+  ) async {
+    final route = await vm.getRouteById(routeId);
+
+    if (route == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Не удалось загрузить маршрут")),
+      );
+      return;
+    }
+
+    routesVm.setRoute(route);
+    navigatorVm.setIndex(1);
+  }
+
+  Widget _buildPhoto(String path) {
+    if (path.startsWith("http")) {
+      return CachedNetworkImage(
+        width: 190,
+        imageUrl: path,
+        fit: BoxFit.cover,
+      );
+    }
+
+    return Image.file(
+      File(path),
+      fit: BoxFit.cover,
+      width: 190,
+    );
+  }
+
+  Widget _buildPhotoGrid(ProfileViewModel vm) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppTextButton(
+          textOnButton: 'Моя галерея',
+          onPressed: () {
+            setState(() {
+              _photosViewMode = ViewMode.horizontal;
+            });
+          },
+          prefixIcon: Assets.icons.folder.svg(
+              width: 35,
+              height: 35
+          ),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontSize: 30
+          ),
+        ),
+
+        const SizedBox(height: 14,),
+
+        GridView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(top: 0),
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: vm.photos.length + 1,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 18,
+                childAspectRatio: 0.85
+            ),
+            itemBuilder: (_, i) {
+              if (i == 0) {
+                return Column(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 0.9842,
+                      child: AddPhotoButton(
+                        onPressed: () => _openAddPhotoDialog(context),
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              final photo = vm.photos[i - 1];
+              return PressableWidget(
+                onPressed: () =>
+                    Navigator.of(context).push(
+                        PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (_, _, _) =>
+                                PhotoGalleryScreen(
+                                    photos: vm.photoFullInfo,
+                                    initialIndex: i
+                                )
+                        )
+                    ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Hero(
+                        tag: photo.imageUrl,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: _buildPhoto(photo.imageUrl)
+                        )
+                      ),
+                    ),
+
+                    const SizedBox(height: 6,),
+
+                    Text(
+                      photo.place.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    )
+                  ],
+                )
+              );
+            }
+        )
+      ],
+    );
+  }
+
+  Widget _buildRouteGrid(
+      BuildContext context,
+      ProfileViewModel vm,
+      MapsViewModel routesVm,
+      NavBarProvider navigatorVm
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppTextButton(
+          textOnButton: 'Мои путешествия',
+          onPressed: () {
+            setState(() {
+              _routesViewMode = ViewMode.horizontal;
+            });
+          },
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontSize: 30
+          ),
+          prefixIcon: Assets.icons.pin.svg(
+              width: 40,
+              height: 40
+          ),
+        ),
+
+        const SizedBox(height: 14,),
+
+        GridView.builder(
+          padding: const EdgeInsets.only(top: 0),
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: vm.routes.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 18,
+                childAspectRatio: 0.85
+            ),
+            itemBuilder: (_, i) {
+              final route = vm.routes[i];
+              final url = vm.buildUrlForRouteImg(i);
+              final date = route.createdAt != null ? DateFormat('dd.MM.yyyy').format(route.createdAt!) : '';
+
+              return PressableWidget(
+                  onPressed: () => _onPressedRoute(route.id, context, vm, routesVm, navigatorVm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Hero(
+                            tag: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: CachedNetworkImage(
+                                  imageUrl: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                                  fit: BoxFit.cover,
+                                )
+                            )
+                        ),
+                      ),
+
+                      const SizedBox(height: 6,),
+
+                      Text(
+                        date,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      )
+                    ],
+                  )
+              );
+            }
+        )
+      ],
+    );
+  }
+
   Widget _buildBody(BuildContext context) {
     final vm = context.watch<ProfileViewModel>();
     final routesVm = context.read<MapsViewModel>();
@@ -63,30 +276,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
+    if (_photosViewMode == ViewMode.grid) {
+      return _buildPhotoGrid(vm);
+    }
+    if (_routesViewMode == ViewMode.grid) {
+      return _buildRouteGrid(context, vm, routesVm, navigatorVm);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Assets.icons.pin.svg(
+        AppTextButton(
+            textOnButton: 'Мои путешествия',
+            onPressed: () {
+              setState(() {
+                _routesViewMode = ViewMode.grid;
+              });
+            },
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontSize: 30
+          ),
+          prefixIcon: Assets.icons.pin.svg(
               width: 40,
               height: 40
-            ),
-            const SizedBox(width: 6,),
-            Text(
-                'Мои путешествия',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontSize: 30
-              ),
-            )
-          ],
+          ),
         ),
 
         const SizedBox(height: 14,),
 
         if (vm.routes.isEmpty && !vm.isLoading && !vm.isError) ...[
           PlaceholderWithIconWidget(
+            height: 14,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontSize: 18
+              ),
               icon: Assets.icons.compass.svg(
                 width: 40,
                 height: 40
@@ -97,40 +320,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           RoutesWidget(
               routes: vm.routes,
               buildUrl: vm.buildUrlForRouteImg,
-              onPressedRoute: (routeId) async {
-
-                final route = await vm.getRouteById(routeId);
-
-                if (route == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Не удалось загрузить маршрут")),
-                  );
-                  return;
-                }
-
-                routesVm.setRoute(route);
-                navigatorVm.setIndex(1);
-              }
+              onPressedRoute: (routeId) => _onPressedRoute(routeId, context, vm, routesVm, navigatorVm)
           ),
         ],
 
         const SizedBox(height: 40,),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Assets.icons.folder.svg(
-                width: 35,
-                height: 35
-            ),
-            const SizedBox(width: 6,),
-            Text(
-              'Моя галерея',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontSize: 30
-              ),
-            )
-          ],
+        AppTextButton(
+            textOnButton: 'Моя галерея',
+            onPressed: () {
+              setState(() {
+                _photosViewMode = ViewMode.grid;
+              });
+            },
+          prefixIcon: Assets.icons.folder.svg(
+              width: 35,
+              height: 35
+          ),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontSize: 30
+          ),
         ),
 
         const SizedBox(height: 14,),
@@ -227,6 +436,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg')
                           ),
                         ),
+
+                        if (_routesViewMode == ViewMode.grid || _photosViewMode == ViewMode.grid)
+                          Positioned(
+                            left: 16,
+                            top: 5,
+                            child: PressableWidget(
+                              onPressed: () {
+                                setState(() {
+                                  _routesViewMode = ViewMode.horizontal;
+                                  _photosViewMode = ViewMode.horizontal;
+                                });
+                              },
+                              child: ClipOval(
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                  child: Container(
+                                    width: 44,
+                                    height: 44,
+                                    padding: const EdgeInsets.all(6),
+                                    color: Colors.black.withValues(alpha: 0.09),
+                                    child: Assets.icons.arrowLeftDark.svg(
+                                      width: 24,
+                                      height: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
 
                         Positioned(
                           right: 16,

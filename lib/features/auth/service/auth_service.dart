@@ -70,4 +70,12 @@ class AuthService {
       return false;
     }
   }
+
+  void setRegistration() {
+    authState.setRegistration();
+  }
+
+  void setLogin() {
+    authState.setUnauthenticated();
+  }
 }

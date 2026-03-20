@@ -325,6 +325,8 @@ class AppRoot extends StatelessWidget {
           child: () {
             switch (authState.value) {
               case AuthEnum.unauthenticated:
+                final vm = context.read<LoginViewModel>();
+                vm.resetState();
                 return const LoginScreen();
               case AuthEnum.authenticated:
                 return MainScaffoldWithNavBar();
@@ -332,6 +334,8 @@ class AppRoot extends StatelessWidget {
                 return const OnboardingScreen();
               case AuthEnum.afterRegistration:
                 return const UserLocationScreen();
+              case AuthEnum.registration:
+                return const RegistrationScreen();
             }
           } (),
         ),

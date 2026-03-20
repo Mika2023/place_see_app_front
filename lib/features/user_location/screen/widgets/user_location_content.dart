@@ -31,8 +31,8 @@ class UserLocationContent extends StatelessWidget {
               const SizedBox(height: 40,),
 
               Assets.icons.pin.svg(
-                width: 150,
-                height: 150,
+                width: 130,
+                height: 130,
               ),
 
               const SizedBox(height: 40,),

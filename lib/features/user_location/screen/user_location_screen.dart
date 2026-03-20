@@ -7,7 +7,9 @@ class UserLocationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Дошли до userLocation");
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Stack(
         fit: StackFit.expand,
         children: [

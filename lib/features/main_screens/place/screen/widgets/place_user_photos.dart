@@ -18,6 +18,7 @@ class PlaceUserPhotos extends StatelessWidget {
   Widget _buildPhoto(String path) {
     if (path.startsWith("http")) {
       return CachedNetworkImage(
+        width: 190,
         imageUrl: path,
         fit: BoxFit.cover,
       );
@@ -26,6 +27,7 @@ class PlaceUserPhotos extends StatelessWidget {
     return Image.file(
       File(path),
       fit: BoxFit.cover,
+      width: 190,
     );
   }
 
