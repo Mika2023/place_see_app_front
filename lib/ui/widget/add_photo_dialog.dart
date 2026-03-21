@@ -222,7 +222,9 @@ class _AddPhotoDialogState extends State<AddPhotoDialog> {
                         textOnButton: selectedPlace?.name ?? "Выбрать место",
                         style: AppTypography.chapterHeadingDark,
                         postfixIcon: Icon(Icons.keyboard_arrow_down),
-                        onPressed: _openSearchSheet
+                        onPressed: _openSearchSheet,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
 
                     const SizedBox(height: 10,),

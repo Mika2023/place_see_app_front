@@ -65,4 +65,15 @@ class PhotoApi {
       return {};
     }
   }
+
+  Future<void> deletePhoto(int photoId) async {
+    try {
+      final response = await dio.delete(
+        '/photos/$photoId'
+      );
+    } catch (e) {
+      debugPrint("Произошла ошибка при удалении фото с id = $photoId - $e");
+      throw Exception("Произошла ошибка при удалении фото с id = $photoId");
+    }
+  }
 }

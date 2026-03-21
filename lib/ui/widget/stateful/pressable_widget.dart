@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 class PressableWidget extends StatefulWidget {
   final Widget child;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongTap;
   final Duration duration;
 
   const PressableWidget({
     super.key,
     required this.child,
     required this.onPressed,
-    this.duration = const Duration(microseconds: 120,),
+    this.duration = const Duration(milliseconds: 120,), this.onLongTap,
   });
 
   @override
@@ -39,6 +40,7 @@ class _PressableWidgetState extends State<PressableWidget> {
       onTapUp: _onTapUp,
       onTapCancel: _onTapCancel,
       onTap: widget.onPressed,
+      onLongPress: widget.onLongTap,
       behavior: HitTestBehavior.translucent,
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1.0,

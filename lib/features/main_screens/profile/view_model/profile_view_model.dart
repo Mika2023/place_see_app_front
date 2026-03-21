@@ -229,4 +229,21 @@ class ProfileViewModel extends ChangeNotifier{
     routes[index] = newRoute;
     notifyListeners();
   }
+
+  bool deletePhoto(int photoId) {
+    final indexOfPhoto = photos.indexWhere((photo) => photo.id == photoId);
+    if (indexOfPhoto == -1) return false;
+
+    try {
+      profileService?.deletePhoto(photoId);
+      photos.removeAt(indexOfPhoto);
+
+      notifyListeners();
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
 }

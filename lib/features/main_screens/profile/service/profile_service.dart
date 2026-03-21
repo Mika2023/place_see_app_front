@@ -85,6 +85,10 @@ class ProfileService {
     return UserProfileInfo.fromJson(rawUser);
   }
 
+  Future<void> deletePhoto(int photoId) async {
+    await photoApi.deletePhoto(photoId);
+  }
+
   void logout() {
     authService.logout();
   }

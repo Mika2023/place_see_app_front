@@ -131,6 +131,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/time-clock.svg
   SvgGenImage get timeClock => const SvgGenImage('assets/icons/time-clock.svg');
 
+  /// File path: assets/icons/trash.svg
+  SvgGenImage get trash => const SvgGenImage('assets/icons/trash.svg');
+
   /// List of all assets
   List<dynamic> get values => [
     arrowDown,
@@ -168,6 +171,7 @@ class $AssetsIconsGen {
     setting,
     share,
     timeClock,
+    trash,
   ];
 }
 

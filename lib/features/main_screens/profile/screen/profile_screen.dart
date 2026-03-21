@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:place_see_app/features/main_screens/maps/view_model/maps_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/screen/widgets/place_user_photos.dart';
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/edit_profile_dialog.dart';
@@ -33,6 +34,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   ViewMode _routesViewMode = ViewMode.horizontal;
   ViewMode _photosViewMode = ViewMode.horizontal;
+  int? _deletePhotoModeIndex;
 
   @override
   void initState() {
@@ -79,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (path.startsWith("http")) {
       return CachedNetworkImage(
         width: 190,
+        height: 190,
         imageUrl: path,
         fit: BoxFit.cover,
       );
@@ -88,6 +91,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
       File(path),
       fit: BoxFit.cover,
       width: 190,
+      height: 190,
+    );
+  }
+
+  void _showDeleteConfirmation(int photoId, ProfileViewModel vm) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          title: Text(
+            "Подтверждение",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            "Вы действительно хотите удалить фото? Это действие нельзя отменить.",
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(
+                  "Отмена",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 18
+                  ),
+                )
+            ),
+            FilledButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  vm.deletePhoto(photoId);
+                  setState(() => _deletePhotoModeIndex = null);
+                },
+                style: FilledButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    backgroundColor: AppColors.lightRed,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12)
+                ),
+                child: Text(
+                    "Удалить",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: 18,
+                        color: AppColors.primary
+                    )
+                )
+            ),
+          ],
+        )
     );
   }
 
@@ -100,6 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () {
             setState(() {
               _photosViewMode = ViewMode.horizontal;
+              _deletePhotoModeIndex = null;
             });
           },
           prefixIcon: Assets.icons.folder.svg(
@@ -139,29 +195,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
 
               final photo = vm.photos[i - 1];
+              final isDeleteModeActive = (i - 1) == _deletePhotoModeIndex;
+
               return PressableWidget(
-                onPressed: () =>
-                    Navigator.of(context).push(
-                        PageRouteBuilder(
-                            opaque: false,
-                            pageBuilder: (_, _, _) =>
-                                PhotoGalleryScreen(
-                                    photos: vm.photoFullInfo,
-                                    initialIndex: i
-                                )
-                        )
-                    ),
+                onPressed: () {
+                  if (isDeleteModeActive) {
+                    setState(() => _deletePhotoModeIndex = null);
+                    return;
+                  }
+
+                  Navigator.of(context).push(
+                      PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (_, _, _) =>
+                              PhotoGalleryScreen(
+                                  photos: vm.photoFullInfo,
+                                  initialIndex: i-1
+                              )
+                      )
+                  );
+                },
+                  onLongTap: () {
+                      setState(() => _deletePhotoModeIndex = i - 1);
+                      HapticFeedback.mediumImpact();
+                  },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Hero(
-                        tag: photo.imageUrl,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: _buildPhoto(photo.imageUrl)
-                        )
-                      ),
+                      child: Stack(
+                        children: [
+                          Hero(
+                              tag: photo.imageUrl,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: _buildPhoto(photo.imageUrl)
+                              )
+                          ),
+
+                          if (isDeleteModeActive)
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: PressableWidget(
+                                  onPressed: () => _showDeleteConfirmation(photo.id, vm),
+                                  child: ClipOval(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                      child: Container(
+                                          padding: const EdgeInsets.all(9),
+                                          color: Colors.black.withValues(alpha: 0.08),
+                                          child: Assets.icons.trash.svg(
+                                              width: 22,
+                                              height: 26
+                                          )
+                                      ),
+                                    ),
+                                  )
+                              ),
+                            ),
+                        ],
+                      )
                     ),
 
                     const SizedBox(height: 6,),
@@ -277,9 +371,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (_photosViewMode == ViewMode.grid) {
+      if (vm.photos.length < 3) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.55,
+          child: _buildPhotoGrid(vm),
+        );
+      }
       return _buildPhotoGrid(vm);
     }
-    if (_routesViewMode == ViewMode.grid) {
+    if (_routesViewMode == ViewMode.grid && vm.routes.isNotEmpty) {
+      if (vm.routes.length < 3) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.55,
+          child: _buildRouteGrid(context, vm, routesVm, navigatorVm),
+        );
+      }
       return _buildRouteGrid(context, vm, routesVm, navigatorVm);
     }
 
@@ -346,6 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         PlaceUserPhotos(
             photos: vm.photoFullInfo,
+            onDelete: (photoId) => vm.deletePhoto(photoId),
             isAddButtonNeeded: true,
             onAddPressed: () => _openAddPhotoDialog(context)
         ),

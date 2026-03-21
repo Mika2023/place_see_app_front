@@ -13,5 +13,6 @@ class AppColors {
   static const disabledLight = Color(0xaaC1FF11);
   static const successGreen = Color(0xff8AE500);
   static const darkRed = Color(0xffFF3700);
+  static const lightRed = Color(0xe5ff3700);
   static const blackForShadow = Colors.black12;
 }
