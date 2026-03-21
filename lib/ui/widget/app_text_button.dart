@@ -23,14 +23,17 @@ class AppTextButton extends StatelessWidget {
   Widget _buildBody() {
     if (postfixIcon != null) {
       return Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          Flexible(
+            child: Text(
             textOnButton,
             textAlign: TextAlign.center,
             style: style,
             overflow: overflow,
             maxLines: maxLines,
+          ),
           ),
           const SizedBox(width: 6,),
           postfixIcon!
