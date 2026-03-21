@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../../core/model/routes/route_profile_info.dart';
+import '../../../../../ui/theme/placeholder_images.dart';
 import '../../../../../ui/widget/stateful/pressable_widget.dart';
 
 class RoutesWidget extends StatelessWidget {
@@ -27,11 +28,11 @@ class RoutesWidget extends StatelessWidget {
           return PressableWidget(
             onPressed: () => onPressedRoute(route.id),
             child: Hero(
-                tag: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                tag: url ?? PlaceholderImages.pathToPlacePlaceholder,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: CachedNetworkImage(
-                    imageUrl: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                    imageUrl: url ?? PlaceholderImages.pathToPlacePlaceholder,
                     fit: BoxFit.cover,
                   ),
                 )

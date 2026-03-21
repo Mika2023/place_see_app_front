@@ -87,8 +87,8 @@ class $AssetsIconsGen {
   /// File path: assets/icons/home.svg
   SvgGenImage get home => const SvgGenImage('assets/icons/home.svg');
 
-  /// File path: assets/icons/img.png
-  AssetGenImage get img => const AssetGenImage('assets/icons/img.png');
+  /// File path: assets/icons/main_image.png
+  AssetGenImage get img => const AssetGenImage('assets/icons/main_image.png');
 
   /// File path: assets/icons/logout.svg
   SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');

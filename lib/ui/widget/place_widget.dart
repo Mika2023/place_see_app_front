@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../gen/assets.gen.dart';
 import '../theme/app_typography.dart';
+import '../theme/placeholder_images.dart';
 import 'auto_scrolling_text_widget.dart';
 
 class PlaceWidget extends StatelessWidget {
@@ -41,7 +42,7 @@ class PlaceWidget extends StatelessWidget {
               children: [
                 CachedNetworkImage(
                   imageUrl: placeCard.mainImageUrl ??
-                      'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                      PlaceholderImages.pathToPlacePlaceholder,
                   fit: BoxFit.cover,
                 ),
 

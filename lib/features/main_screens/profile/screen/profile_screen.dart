@@ -20,6 +20,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../../../../ui/theme/app_colors.dart';
+import '../../../../ui/theme/placeholder_images.dart';
 import '../../../../ui/widget/photo_gallery_screen.dart';
 import '../../../../ui/widget/placeholder_with_icon_widget.dart';
 import '../../../../ui/widget/stateful/pressable_widget.dart';
@@ -325,11 +326,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Expanded(
                         child: Hero(
-                            tag: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                            tag: url ?? PlaceholderImages.pathToPlacePlaceholder,
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: CachedNetworkImage(
-                                  imageUrl: url ?? 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                                  imageUrl: url ?? PlaceholderImages.pathToPlacePlaceholder,
                                   fit: BoxFit.cover,
                                 )
                             )
@@ -514,7 +515,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onApply: vm.editUser,
           initialNickname: vm.userProfileInfo?.nickname ?? '',
           initialAvatar: vm.userProfileInfo?.avatarImageUrl ??
-              'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+              PlaceholderImages.pathToProfilePlaceholder,
         )
     );
   }
@@ -540,7 +541,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             radius: 105,
                             backgroundImage: _buildAvatarPhoto(
                                 vm.userProfileInfo?.avatarImageUrl ??
-                                'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg')
+                                PlaceholderImages.pathToProfilePlaceholder)
                           ),
                         ),
 

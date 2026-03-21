@@ -5,6 +5,8 @@ import 'package:place_see_app/ui/theme/app_typography.dart';
 import 'package:place_see_app/ui/widget/auto_scrolling_text_widget.dart';
 import 'package:place_see_app/ui/widget/stateful/pressable_widget.dart';
 
+import '../theme/placeholder_images.dart';
+
 class SubCategoryWidget extends StatelessWidget {
   final SubCategory subCategory;
   final double? height;
@@ -31,7 +33,7 @@ class SubCategoryWidget extends StatelessWidget {
               children: [
                 CachedNetworkImage(
                   imageUrl: subCategory.imageUrl ??
-                      'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+                      PlaceholderImages.pathToPlacePlaceholder,
                   fit: BoxFit.cover,
                 ),
 

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:place_see_app/core/model/photos/photo_full_info.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
 
+import '../../../../../ui/theme/placeholder_images.dart';
+
 class PlaceMainPhotosGallery extends StatefulWidget {
   final List<PhotoFullInfo> photos;
 
@@ -25,7 +27,7 @@ class _PlaceMainPhotosGalleryState extends State<PlaceMainPhotosGallery> {
       children: [
         if (widget.photos.isEmpty)
           CachedNetworkImage(
-            imageUrl: 'https://lqtiftmgexxmtoohvldc.supabase.co/storage/v1/object/public/place_photos/b1cc9987043f82eda1963ab8ba5d03c5%20(1).jpg',
+            imageUrl: PlaceholderImages.pathToPlacePlaceholder,
             fit: BoxFit.cover,
           ),
 
