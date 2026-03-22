@@ -2,7 +2,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Хранилище токенов
 class TokenStorage {
-  final _storage = const FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage(
+    webOptions: WebOptions(
+      dbName: 'PlaceSeeSecureStorage',
+      publicKey: 'place_see_app_key',
+      useSessionStorage: true
+    )
+  );
 
   Future<void> saveTokens({required String accessToken, required String refreshToken,}) async{
     await _storage.write(key: "access_token", value: accessToken);
