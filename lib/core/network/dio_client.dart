@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/config/app_config.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
@@ -11,7 +12,7 @@ class DioClient {
 
   DioClient(this.tokenStorage, this.authState) : dio = Dio(
     BaseOptions(
-      baseUrl: AppConfig.backendBaseUrl,
+      baseUrl: kIsWeb ? '' : AppConfig.backendBaseUrl,
       connectTimeout: const Duration(seconds: AppConfig.connectTimeoutSeconds),
       receiveTimeout: const Duration(seconds: AppConfig.receiveTimeoutSeconds),
     ),
