@@ -32,6 +32,10 @@
 	<string>Main</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Нам нужно ваше местоположение, чтобы показать фотогеничные места рядом с вами</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Нам нужно ваше местоположение, чтобы показать фотогеничные места рядом с вами</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Нам нужно ваше местоположение, чтобы показать фотогеничные места рядом с вами</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
