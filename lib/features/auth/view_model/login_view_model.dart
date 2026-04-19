@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:place_see_app/features/auth/screen/registration_screen.dart';
 import 'package:place_see_app/features/auth/service/auth_service.dart';
@@ -62,8 +63,8 @@ class LoginViewModel extends ChangeNotifier{
     try {
       await authService?.login(nickname, password);
       _handleSuccess();
-    } catch(e) {
-      error = e.toString();
+    } catch (e) {
+      error = e.toString().replaceFirst("Exception:", '');
       _handleError();
     } finally {
       notifyListeners();
@@ -98,6 +99,6 @@ class LoginViewModel extends ChangeNotifier{
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = "Неверно введены никнейм или пароль!\nЗарегистрироваться";
+    _textOnNavigateLink = "$error\nЗарегистрироваться";
   }
 }

@@ -131,8 +131,9 @@ class ProfileViewModel extends ChangeNotifier{
     if (maxDiff < 0.005) return 13;
     if (maxDiff < 0.02) return 12;
     if (maxDiff < 0.05) return 11;
+    if (maxDiff < 0.08) return 10;
 
-    return 10;
+    return 9;
   }
 
   void logout() {

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,6 +9,7 @@ import '../../../../../core/permission/permission_service.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../../../../../ui/enum/app_button_state.dart';
 import '../../../../../ui/theme/app_colors.dart';
+import '../../../../../ui/theme/app_typography.dart';
 import '../../../../../ui/widget/app_button.dart';
 import '../../../../../ui/widget/stateful/pressable_widget.dart';
 
@@ -63,38 +63,80 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   void _showPermissionDeniedDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Нет доступа"),
-        content: const Text("Разрешите доступ к галерее, чтобы выбрать фото"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Ок"),
-          )
-        ],
-      ),
+        builder: (ctx) => AlertDialog(
+          title: Text(
+              "Нет доступа",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold
+              ),
+              textAlign: TextAlign.center
+          ),
+          content: Text(
+            "Разрешите доступ к галерее, чтобы выбрать фото",
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            FilledButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+                style: FilledButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    backgroundColor: AppColors.secondary,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12)
+                ),
+                child: Text(
+                    "Ок",
+                    style: AppTypography.buttonTextDark
+                )
+            ),
+          ],
+        )
     );
   }
 
   void _showGoToSettingsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Доступ запрещён"),
-        content: const Text(
+      builder: (ctx) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actionsOverflowDirection: VerticalDirection.down,
+        actionsOverflowButtonSpacing: 8,
+        title: Text(
+          "Доступ запрещён",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
           "Вы запретили доступ к галерее. Разрешите его в настройках приложения.",
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Отмена"),
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                  "Отмена",
+                  style: AppTypography.smallButtonTextDark
+              )
           ),
-          TextButton(
-            onPressed: () {
-              openAppSettings();
-              Navigator.pop(context);
-            },
-            child: const Text("Открыть настройки"),
+          FilledButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.pop(ctx);
+              },
+              style: FilledButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  backgroundColor: AppColors.secondary,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+              ),
+              child: Text(
+                  "Настройки",
+                  style: AppTypography.smallButtonTextDark
+              )
           ),
         ],
       ),
@@ -163,7 +205,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           Text(
                               'Редактировать профиль',
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.bold
+                                  fontWeight: FontWeight.bold,
+                                fontSize: MediaQuery.of(context).size.width < 360 ? 30 : 32
                               )
                           ),
                         ],

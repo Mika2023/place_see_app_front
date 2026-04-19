@@ -57,14 +57,34 @@ class _AddPhotoDialogState extends State<AddPhotoDialog> {
   void _showPermissionDeniedDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Нет доступа"),
-        content: const Text("Разрешите доступ к галерее, чтобы выбрать фото"),
+      builder: (ctx) => AlertDialog(
+        title: Text(
+            "Нет доступа",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold
+          ),
+          textAlign: TextAlign.center
+        ),
+        content: Text(
+            "Разрешите доступ к галерее, чтобы выбрать фото",
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Ок"),
-          )
+          FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              style: FilledButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  backgroundColor: AppColors.secondary,
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12)
+              ),
+              child: Text(
+                  "Ок",
+                  style: AppTypography.buttonTextDark
+              )
+          ),
         ],
       ),
     );
@@ -73,22 +93,44 @@ class _AddPhotoDialogState extends State<AddPhotoDialog> {
   void _showGoToSettingsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Доступ запрещён"),
-        content: const Text(
+      builder: (ctx) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actionsOverflowDirection: VerticalDirection.down,
+        actionsOverflowButtonSpacing: 8,
+        title: Text(
+            "Доступ запрещён",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
           "Вы запретили доступ к галерее. Разрешите его в настройках приложения.",
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Отмена"),
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                "Отмена",
+                style: AppTypography.smallButtonTextDark
+              )
           ),
-          TextButton(
-            onPressed: () {
-              openAppSettings();
-              Navigator.pop(context);
-            },
-            child: const Text("Открыть настройки"),
+          FilledButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.pop(ctx);
+              },
+              style: FilledButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  backgroundColor: AppColors.secondary,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+              ),
+              child: Text(
+                  "Настройки",
+                  style: AppTypography.smallButtonTextDark
+              )
           ),
         ],
       ),

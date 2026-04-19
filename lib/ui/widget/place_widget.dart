@@ -93,7 +93,7 @@ class PlaceWidget extends StatelessWidget {
                 Positioned(
                     left: 12,
                     right: 11,
-                    bottom: 12,
+                    bottom: MediaQuery.of(context).size.width < 360 ? 13 : 12,
                     child: SizedBox(
                       height: 25,
                       child: AutoScrollingTextWidget(

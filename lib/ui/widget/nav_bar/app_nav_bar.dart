@@ -53,12 +53,14 @@ class AppNavBar extends StatelessWidget {
   }
 }
 
+final double sizeOfItems = 26;
+
 final List<AppNavItem> navItems = [
   AppNavItem(
       label: 'Home',
       iconBuilder: (selected) => Assets.icons.home.svg(
-        width: 24,
-        height: 24,
+        width: sizeOfItems,
+        height: sizeOfItems,
         colorFilter: ColorFilter.mode(
             selected? AppColors.secondary : AppColors.additionalTwo,
             BlendMode.srcIn,
@@ -68,8 +70,8 @@ final List<AppNavItem> navItems = [
   AppNavItem(
     label: 'Map',
     iconBuilder: (selected) => Assets.icons.compass.svg(
-      width: 24,
-      height: 24,
+      width: sizeOfItems + 1,
+      height: sizeOfItems + 1,
       colorFilter: ColorFilter.mode(
         selected? AppColors.secondary : AppColors.additionalTwo,
         BlendMode.srcIn,
@@ -79,8 +81,8 @@ final List<AppNavItem> navItems = [
   AppNavItem(
     label: 'Favorites',
     iconBuilder: (selected) => Assets.icons.heart.svg(
-      width: 24,
-      height: 24,
+      width: sizeOfItems,
+      height: sizeOfItems,
       colorFilter: ColorFilter.mode(
         selected? AppColors.secondary : AppColors.additionalTwo,
         BlendMode.srcIn,
@@ -90,8 +92,8 @@ final List<AppNavItem> navItems = [
   AppNavItem(
     label: 'Profile',
     iconBuilder: (selected) => Assets.icons.menu.svg(
-      width: 24,
-      height: 24,
+      width: sizeOfItems,
+      height: sizeOfItems,
       colorFilter: ColorFilter.mode(
         selected? AppColors.secondary : AppColors.additionalTwo,
         BlendMode.srcIn,

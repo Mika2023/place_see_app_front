@@ -10,6 +10,7 @@ import 'package:place_see_app/features/main_screens/profile/screen/widgets/edit_
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/routes_widget.dart';
 import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
 import 'package:place_see_app/ui/enum/view_mode.dart';
+import 'package:place_see_app/ui/theme/app_typography.dart';
 import 'package:place_see_app/ui/widget/add_photo_button.dart';
 import 'package:place_see_app/ui/widget/add_photo_dialog.dart';
 import 'package:place_see_app/ui/widget/app_text_button.dart';
@@ -118,9 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   "Отмена",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 18
-                  ),
+                  style: AppTypography.buttonTextDark,
                 )
             ),
             FilledButton(
@@ -136,10 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 child: Text(
                     "Удалить",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 18,
-                        color: AppColors.primary
-                    )
+                    style: AppTypography.buttonTextDark
                 )
             ),
           ],

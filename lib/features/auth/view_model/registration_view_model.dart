@@ -70,7 +70,7 @@ class RegistrationViewModel extends ChangeNotifier{
       await authService?.register(nickname, email, password);
       _handleSuccess();
     } catch (e) {
-      error = e.toString();
+      error = e.toString().replaceFirst("Exception:", '');
 
       if (kDebugMode) {
         print(error);
@@ -110,6 +110,6 @@ class RegistrationViewModel extends ChangeNotifier{
     _currentCircleState = AppCircleState.error;
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
-    _textOnNavigateLink = "Пользователь с такой почтой уже существует!\nВойти в свой аккаунт";
+    _textOnNavigateLink = "$error\nВойти в свой аккаунт";
   }
 }

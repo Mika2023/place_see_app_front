@@ -29,17 +29,42 @@ class AuthService {
   }
 
   Future<void> login(String nickname, String password) async {
-    final response = await authApi.login(nickname, password);
+    try {
+      final response = await authApi.login(nickname, password);
+      await _handleAuthResponse(response);
+      authState.setAuthenticated();
+    } on DioException catch (e) {
+      final exceptionResponse = e.response?.data as Map<String, dynamic>;
 
-    await _handleAuthResponse(response);
-    authState.setAuthenticated();
+      if (exceptionResponse.isEmpty || !exceptionResponse.containsKey("message")) {
+        throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+      }
+
+      final exMessage = exceptionResponse["message"];
+      throw Exception(exMessage);
+    } catch (e) {
+      throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+    }
   }
 
   Future<void> register(String nickname, String email, String password) async {
-    final response = await authApi.register(nickname, email, password);
+    try {
+      final response = await authApi.register(nickname, email, password);
 
-    await _handleAuthResponse(response);
-    authState.setAfterRegistration();
+      await _handleAuthResponse(response);
+      authState.setAfterRegistration();
+    } on DioException catch (e) {
+      final exceptionResponse = e.response?.data as Map<String, dynamic>;
+
+      if (exceptionResponse.isEmpty || !exceptionResponse.containsKey("message")) {
+        throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+      }
+
+      final exMessage = exceptionResponse["message"];
+      throw Exception(exMessage);
+    } catch (e) {
+      throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+    }
   }
 
   Future<void> logout() async {

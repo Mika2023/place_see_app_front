@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:place_see_app/core/model/photos/photo_full_info.dart';
 import 'package:place_see_app/ui/theme/app_colors.dart';
+import 'package:place_see_app/ui/theme/app_typography.dart';
 import 'package:place_see_app/ui/widget/add_photo_button.dart';
 import 'package:place_see_app/ui/widget/photo_gallery_screen.dart';
 import 'package:place_see_app/ui/widget/stateful/pressable_widget.dart';
@@ -67,9 +68,7 @@ class _PlaceUserPhotosState extends State<PlaceUserPhotos> {
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                     "Отмена",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 18
-                  ),
+                  style: AppTypography.buttonTextDark
                 )
             ),
             FilledButton(
@@ -85,10 +84,7 @@ class _PlaceUserPhotosState extends State<PlaceUserPhotos> {
                 ),
                 child: Text(
                     "Удалить",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 18,
-                      color: AppColors.primary
-                    )
+                    style: AppTypography.buttonTextLight
                 )
             ),
           ],
