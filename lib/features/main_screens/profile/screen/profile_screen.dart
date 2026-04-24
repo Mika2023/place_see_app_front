@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:place_see_app/core/config/app_config.dart';
 import 'package:place_see_app/features/main_screens/maps/view_model/maps_view_model.dart';
 import 'package:place_see_app/features/main_screens/place/screen/widgets/place_user_photos.dart';
 import 'package:place_see_app/features/main_screens/profile/screen/widgets/edit_profile_dialog.dart';
@@ -18,6 +19,7 @@ import 'package:place_see_app/ui/widget/decoration/top_circular_border.dart';
 import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../../../../ui/theme/app_colors.dart';
@@ -516,6 +518,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _openSurveyUrl() async {
+    final uri = Uri.parse(AppConfig.surveyUrl);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Не удалось открыть страницу опроса")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ProfileViewModel>();
@@ -588,6 +605,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 if (value == 'edit') {
                                   _openEditProfileDialog(context);
                                 }
+                                if (value == 'survey') {
+                                  _openSurveyUrl();
+                                }
                               },
                               color: AppColors.primary,
                               elevation: 8,
@@ -624,6 +644,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         const SizedBox(width: 5,),
                                         Text(
                                           'Редактировать',
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        )
+                                      ],
+                                    )
+                                ),
+                                PopupMenuItem(
+                                    value: 'survey',
+                                    child: Row(
+                                      children: [
+                                        Assets.icons.star.svg(
+                                            width: 28,
+                                            height: 28
+                                        ),
+                                        const SizedBox(width: 5,),
+                                        Text(
+                                          'Пройти опрос',
                                           style: Theme
                                               .of(context)
                                               .textTheme

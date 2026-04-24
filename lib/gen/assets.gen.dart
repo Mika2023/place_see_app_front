@@ -87,9 +87,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/home.svg
   SvgGenImage get home => const SvgGenImage('assets/icons/home.svg');
 
-  /// File path: assets/icons/main_image.png
-  AssetGenImage get img => const AssetGenImage('assets/icons/main_image.png');
-
   /// File path: assets/icons/logout.svg
   SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');
 
@@ -116,6 +113,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pin.svg
   SvgGenImage get pin => const SvgGenImage('assets/icons/pin.svg');
 
+  /// File path: assets/icons/placeholder.png
+  AssetGenImage get placeholder =>
+      const AssetGenImage('assets/icons/placeholder.png');
+
   /// File path: assets/icons/plus.svg
   SvgGenImage get plus => const SvgGenImage('assets/icons/plus.svg');
 
@@ -127,6 +128,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/share.svg
   SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
+
+  /// File path: assets/icons/star.svg
+  SvgGenImage get star => const SvgGenImage('assets/icons/star.svg');
 
   /// File path: assets/icons/time-clock.svg
   SvgGenImage get timeClock => const SvgGenImage('assets/icons/time-clock.svg');
@@ -157,7 +161,6 @@ class $AssetsIconsGen {
     heartSelected,
     heart,
     home,
-    img,
     logout,
     menu,
     noData,
@@ -166,10 +169,12 @@ class $AssetsIconsGen {
     pencil,
     pinFilled,
     pin,
+    placeholder,
     plus,
     search,
     setting,
     share,
+    star,
     timeClock,
     trash,
   ];

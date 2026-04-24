@@ -6,4 +6,5 @@ class AppConfig {
   static const int receiveTimeoutSeconds = 20;
   static final String baseUrlFs = dotenv.env['BASE_FS_URL']!;
   static final String twoGisApiKey = dotenv.env['TWO_GIS_API_KEY']!;
+  static final String surveyUrl = dotenv.env['SURVEY_URL']!;
 }
