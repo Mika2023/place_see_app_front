@@ -8,6 +8,7 @@ import 'package:place_see_app/core/api/favorite_places_api.dart';
 import 'package:place_see_app/core/api/photo_api.dart';
 import 'package:place_see_app/core/api/places_api.dart';
 import 'package:place_see_app/core/api/route_api.dart';
+import 'package:place_see_app/core/api/system_events_api.dart';
 import 'package:place_see_app/core/api/tag_api.dart';
 import 'package:place_see_app/core/api/user_api.dart';
 import 'package:place_see_app/core/api/user_location_api.dart';
@@ -112,6 +113,10 @@ class MyApp extends StatelessWidget {
 
         ProxyProvider<DioClient, AuthApi>(update:
             (_, dioClient, _) => AuthApi(dioClient.dio),
+        ),
+
+        ProxyProvider<DioClient, SystemEventsApi>(update:
+            (_, dioClient, _) => SystemEventsApi(dioClient.dio),
         ),
 
         ProxyProvider<DioClient, UserLocationApi>(update:
@@ -291,8 +296,12 @@ class MyApp extends StatelessWidget {
           },
         ),
 
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<SystemEventsApi, NavBarProvider>(
           create: (_) => NavBarProvider(),
+          update: (_, systemEventsApi, previous) {
+            previous!.update(systemEventsApi);
+            return previous;
+          },
           child: const MainScaffoldWithNavBar(),
         ),
 
