@@ -54,6 +54,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/close.svg
   SvgGenImage get close => const SvgGenImage('assets/icons/close.svg');
 
+  /// File path: assets/icons/closed-eye.svg
+  SvgGenImage get closedEye => const SvgGenImage('assets/icons/closed-eye.svg');
+
   /// File path: assets/icons/compass.svg
   SvgGenImage get compass => const SvgGenImage('assets/icons/compass.svg');
 
@@ -99,6 +102,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/notification.svg
   SvgGenImage get notification =>
       const SvgGenImage('assets/icons/notification.svg');
+
+  /// File path: assets/icons/opened-eye.svg
+  SvgGenImage get openedEye => const SvgGenImage('assets/icons/opened-eye.svg');
 
   /// File path: assets/icons/parameters.svg
   SvgGenImage get parameters =>
@@ -151,6 +157,7 @@ class $AssetsIconsGen {
     circle,
     cirlceClose,
     close,
+    closedEye,
     compass,
     connectionOffline,
     discs,
@@ -165,6 +172,7 @@ class $AssetsIconsGen {
     menu,
     noData,
     notification,
+    openedEye,
     parameters,
     pencil,
     pinFilled,

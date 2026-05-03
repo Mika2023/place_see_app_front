@@ -206,7 +206,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                               'Редактировать профиль',
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                fontSize: MediaQuery.of(context).size.width < 360 ? 30 : 32
+                                fontSize: MediaQuery.of(context).size.width < 360 ? 22 : 24
                               )
                           ),
                         ],

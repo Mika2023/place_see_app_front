@@ -16,6 +16,7 @@ class LoginViewModel extends ChangeNotifier{
   String? error;
   String _textOnLoginButton = "Войти";
   String _textOnNavigateLink = "Зарегистрироваться";
+  bool _isPasswordObscured = true;
   AppButtonState _currentState = AppButtonState.disabled;
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
@@ -33,6 +34,7 @@ class LoginViewModel extends ChangeNotifier{
   AppCircleState get circleState => _currentCircleState;
   String get textOnLoginButton => _textOnLoginButton;
   String get textOnNavigateLink => _textOnNavigateLink;
+  bool get isPasswordObscured => _isPasswordObscured;
 
   void updateNicknameField(String value) {
     nickname = value;
@@ -83,6 +85,7 @@ class LoginViewModel extends ChangeNotifier{
     _currentState = AppButtonState.disabled;
     _textOnLoginButton = "Войти";
     _textOnNavigateLink = "Зарегистрироваться";
+    _isPasswordObscured = true;
   }
 
   void _handleSuccess() {
@@ -100,5 +103,10 @@ class LoginViewModel extends ChangeNotifier{
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
     _textOnNavigateLink = "$error\nЗарегистрироваться";
+  }
+
+  void togglePasswordObscured() {
+    _isPasswordObscured = !_isPasswordObscured;
+    notifyListeners();
   }
 }

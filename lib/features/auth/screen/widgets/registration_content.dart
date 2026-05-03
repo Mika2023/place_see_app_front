@@ -4,6 +4,7 @@ import 'package:place_see_app/ui/widget/app_input_widget.dart';
 import 'package:place_see_app/ui/widget/app_text_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../gen/assets.gen.dart';
 import '../../../../ui/enum/app_button_style.dart';
 import '../../../../ui/widget/app_button.dart';
 
@@ -51,7 +52,17 @@ class RegistrationContent extends StatelessWidget {
                       hint: 'Введите пароль',
                       state: vm.fieldState,
                       onChanged: vm.updatePasswordField,
-                      obscureText: true,
+                      obscureText: vm.isPasswordObscured,
+                      postfixIcon: GestureDetector(
+                        onTap: () => vm.togglePasswordObscured(),
+                        child: vm.isPasswordObscured ? Assets.icons.openedEye.svg(
+                            width: 17,
+                            height: 17
+                        ) : Assets.icons.closedEye.svg(
+                            width: 27,
+                            height: 27
+                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 45),

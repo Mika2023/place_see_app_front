@@ -21,6 +21,7 @@ class RegistrationViewModel extends ChangeNotifier{
   AppButtonState _currentTextButtonState = AppButtonState.enabled;
   AppInputState _currentFieldsState = AppInputState.normal;
   AppCircleState _currentCircleState = AppCircleState.normal;
+  bool _isPasswordObscured = true;
 
   void updateRegistrationVM(AuthService service, NavigatorService navigation) {
     authService = service;
@@ -34,6 +35,7 @@ class RegistrationViewModel extends ChangeNotifier{
   AppCircleState get circleState => _currentCircleState;
   String get textOnLoginButton => _textOnRegistrationButton;
   String get textOnNavigateLink => _textOnNavigateLink;
+  bool get isPasswordObscured => _isPasswordObscured;
 
   void updateEmailField(String value) {
     email = value;
@@ -94,6 +96,7 @@ class RegistrationViewModel extends ChangeNotifier{
     _currentTextButtonState = AppButtonState.enabled;
     _textOnRegistrationButton = "Зарегистрироваться";
     _textOnNavigateLink = "Войти в свой аккаунт";
+    _isPasswordObscured = true;
   }
 
   void _handleSuccess() {
@@ -111,5 +114,10 @@ class RegistrationViewModel extends ChangeNotifier{
     _currentState = AppButtonState.enabled;
     _currentFieldsState = AppInputState.error;
     _textOnNavigateLink = "$error\nВойти в свой аккаунт";
+  }
+
+  void togglePasswordObscured() {
+    _isPasswordObscured = !_isPasswordObscured;
+    notifyListeners();
   }
 }

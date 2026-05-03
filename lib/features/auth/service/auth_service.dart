@@ -4,6 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:place_see_app/core/api/auth_api.dart';
 import 'package:place_see_app/core/auth/auth_state.dart';
 import 'package:place_see_app/core/local_storage/token_storage.dart';
+import 'package:place_see_app/core/model/user/verification_code_for_change_password.dart';
 
 class AuthService {
   final AuthApi authApi;
@@ -22,7 +23,7 @@ class AuthService {
       authState.setAuthenticated();
     } else if (refreshToken != null && !JwtDecoder.isExpired(refreshToken)) {
       bool success = await _refreshToken(refreshToken);
-      success? authState.setAuthenticated() : authState.setUnauthenticated();
+      success ? authState.setAuthenticated() : authState.setUnauthenticated();
     } else {
       authState.setUnauthenticated();
     }
@@ -72,6 +73,46 @@ class AuthService {
     await authApi.logout(refreshToken);
     await tokenStorage.clear();
     authState.setUnauthenticated();
+  }
+
+  Future<VerificationCodeForChangePassword> sendCodeToChangePassword(String toEmail) async {
+    try {
+      final rawCodeDto = await authApi.sendEmailCodeToChangePassword(toEmail);
+
+      if (rawCodeDto.isEmpty) throw Exception("Ответ от апи пришел пустой!");
+
+      return VerificationCodeForChangePassword.fromJson(rawCodeDto);
+    } on DioException catch (e) {
+      final exceptionResponse = e.response?.data as Map<String, dynamic>;
+
+      if (exceptionResponse.isEmpty || !exceptionResponse.containsKey("message")) {
+        throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+      }
+
+      final exMessage = exceptionResponse["message"];
+      throw Exception(exMessage);
+    } catch (e) {
+      throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+    }
+  }
+
+  Future<void> changePasswordAndLogin(int userId, String newPassword) async {
+    try {
+      final response = await authApi.editPassword(newPassword, userId);
+      await _handleAuthResponse(response);
+      authState.setAuthenticated();
+    } on DioException catch (e) {
+      final exceptionResponse = e.response?.data as Map<String, dynamic>;
+
+      if (exceptionResponse.isEmpty || !exceptionResponse.containsKey("message")) {
+        throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+      }
+
+      final exMessage = exceptionResponse["message"];
+      throw Exception(exMessage);
+    } catch (e) {
+      throw Exception("Произошла ошибка! Попробуйте снова\n или обратитесь к администратору");
+    }
   }
 
   Future<void> _handleAuthResponse(Response response) async {
