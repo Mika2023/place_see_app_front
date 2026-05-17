@@ -70,189 +70,214 @@ class _PlaceScreenState extends State<PlaceScreen> {
 
     final place = vm.placeFullInfo!;
     final isUserPhotos = vm.userPhotos.isNotEmpty;
-    final isPlacesNearby = vm.placesNearby != null && vm.placesNearby!.isNotEmpty;
+    final isPlacesNearby = vm.placesNearby != null &&
+        vm.placesNearby!.isNotEmpty;
 
     return Scaffold(
-      extendBody: true,
-      body: CustomScrollView(
-              slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 330,
-                          child: PlaceHeader(photos: vm.mainPhotos),
-                        ),
+        extendBody: true,
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+                child: Column(
+                    children: [
+                      SizedBox(
+                        height: 330,
+                        child: PlaceHeader(photos: vm.mainPhotos),
+                      ),
 
-                        Transform.translate(
-                          offset: const Offset(0, -20),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(20),
-                              decoration: const BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16)
-                                  )
+                      Transform.translate(
+                        offset: const Offset(0, -20),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16)
+                              )
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                place.name,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headlineMedium,
                               ),
-                              child: Column(
+
+                              const SizedBox(height: 14,),
+
+                              Row(
+                                children: [
+                                  Assets.icons.pin.svg(
+                                      height: 28,
+                                      width: 28
+                                  ),
+                                  const SizedBox(width: 6,),
+
+                                  Expanded(
+                                      child: Text(
+                                        place.address ?? 'Москва',
+                                        style: AppTypography.smallTextLight,
+                                      )
+                                  )
+                                ],
+                              ),
+
+                              const SizedBox(height: 14,),
+
+                              PlaceTags(tags: vm.tags),
+
+                              const SizedBox(height: 14,),
+
+                              Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    place.name,
+                                  Expanded(
+                                    child: WorkingHoursCard(
+                                        workingHours: place.workingHours ??
+                                            {}),),
+                                  const SizedBox(width: 5,),
+                                  Expanded(child:
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.additionalTwo,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Assets.icons.discs.svg(
+                                            width: 20,
+                                            height: 23
+                                        ),
+                                        const Spacer(),
+
+                                        Text(
+                                          place.visitCost == null ||
+                                              place.visitCost == 0
+                                              ? 'Бесплатно'
+                                              : '${place
+                                              .visitCost!.toInt()}₽',
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        ),
+                                        const Spacer(),
+                                      ],
+                                    ),
+                                  ))
+                                ],
+                              ),
+
+                              if (vm.getMetroStations() != null) ...[
+                                const SizedBox(height: 14,),
+
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Метро',
+                                      style: AppTypography.chapterHeadingDark,
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    Expanded(
+                                        child: Text(
+                                          vm.getMetroStations()!,
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .labelSmall,
+                                        )
+                                    )
+                                  ],
+                                ),
+                              ],
+
+                              const SizedBox(height: 14,),
+
+                              if (place.description != null) ...[
+                                Text(
+                                  'Описание',
+                                  style: AppTypography.chapterHeadingDark,
+                                ),
+                                const SizedBox(height: 10,),
+                                 Text(
+                                    place.description ?? 'Нет описания',
                                     style: Theme
                                         .of(context)
                                         .textTheme
-                                        .headlineMedium,
+                                        .labelSmall,
                                   ),
 
-                                  const SizedBox(height: 14,),
+                                const SizedBox(height: 14,),
+                              ],
 
-                                  Row(
-                                    children: [
-                                      Assets.icons.pin.svg(
-                                          height: 28,
-                                          width: 28
-                                      ),
-                                      const SizedBox(width: 6,),
+                              if (isUserPhotos) ...[
+                                Text(
+                                  'Фотографии пользователей',
+                                  style: AppTypography.chapterHeadingDark,
+                                ),
 
-                                      Expanded(
-                                          child: Text(
-                                            place.address ?? 'Москва',
-                                            style: AppTypography.smallTextLight,
-                                          )
-                                      )
-                                    ],
+                                const SizedBox(height: 12,),
+
+                                SizedBox(
+                                  height: 190,
+                                  child: PlaceUserPhotos(photos: vm.userPhotos,
+                                    isAddButtonNeeded: false,),
+                                ),
+
+                                const SizedBox(height: 20,),
+                              ],
+
+                              if (isPlacesNearby) ...[
+                                Text(
+                                  'Места рядом',
+                                  style: AppTypography.chapterHeadingDark,
+                                ),
+
+                                const SizedBox(height: 12,),
+
+                                SizedBox(
+                                  height: 220,
+                                  child: PlacesNearby(
+                                    places: vm.placesNearby,
                                   ),
+                                ),
+                              ],
 
-                                  const SizedBox(height: 14,),
-
-                                  PlaceTags(tags: vm.tags),
-
-                                  const SizedBox(height: 14,),
-
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: WorkingHoursCard(workingHours: place.workingHours ?? {}),),
-                                      const SizedBox(width: 5,),
-                                      Expanded(child:
-                                      Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.additionalTwo,
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Assets.icons.discs.svg(
-                                                width: 20,
-                                                height: 23
-                                            ),
-                                            const Spacer(),
-
-                                            Text(
-                                              place.visitCost == 0 ? 'Бесплатно' : '${place
-                                                  .visitCost.toInt()}₽',
-                                              style: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .labelMedium,
-                                            ),
-                                            const Spacer(),
-                                          ],
-                                        ),
-                                      ))
-                                    ],
-                                  ),
-
-                                 if (vm.getMetroStations() != null) ...[
-                                   const SizedBox(height: 14,),
-
-                                   Row(
-                                     children: [
-                                       Text(
-                                         'Метро',
-                                         style: AppTypography.chapterHeadingDark,
-                                       ),
-                                       const SizedBox(width: 10,),
-                                       Expanded(
-                                           child: Text(
-                                             vm.getMetroStations()!,
-                                             style: Theme
-                                                 .of(context)
-                                                 .textTheme
-                                                 .labelSmall,
-                                           )
-                                       )
-                                     ],
-                                   ),
-                                 ],
-
-                                  const SizedBox(height: 14,),
-
-                                  if (isUserPhotos) ...[
-                                    Text(
-                                      'Фотографии пользователей',
-                                      style: AppTypography.chapterHeadingDark,
-                                    ),
-
-                                    const SizedBox(height: 12,),
-
-                                    SizedBox(
-                                      height: 190,
-                                      child: PlaceUserPhotos(photos: vm.userPhotos, isAddButtonNeeded: false,),
-                                    ),
-
-                                    const SizedBox(height: 20,),
-                                  ],
-
-                                  if (isPlacesNearby) ...[
-                                    Text(
-                                      'Места рядом',
-                                      style: AppTypography.chapterHeadingDark,
-                                    ),
-
-                                    const SizedBox(height: 12,),
-
-                                    SizedBox(
-                                      height: 220,
-                                      child: PlacesNearby(
-                                        places: vm.placesNearby,
-                                      ),
-                                    ),
-                                  ],
-
-                                  const SizedBox(height: 60,)
-                                ],
-                              ),
-                            ),
-                        )
-                        ]
-                    )
-                  ),
-                ],
-              ),
-          bottomNavigationBar: SafeArea(
+                              const SizedBox(height: 60,)
+                            ],
+                          ),
+                        ),
+                      )
+                    ]
+                )
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
             minimum: const EdgeInsets.fromLTRB(50, 0, 50, 20),
-              child: Container(
-                color: Colors.transparent,
-                height: 58,
-                child: AppButton(
-                      textOnButton: 'Проложить маршрут',
-                      icon: Assets.icons.arrowRight.svg(
-                        width: 19,
-                        height: 16
-                      ),
-                      onPressed: () {
-                        context.read<MapDataProvider>().setPlace(vm.placeFullInfo!.id, vm.placeFullInfo!.name);
-                        context.read<NavBarProvider>().setIndex(1);
-                      }
-                ),
-              )
-          )
-      );
+            child: Container(
+              color: Colors.transparent,
+              height: 58,
+              child: AppButton(
+                  textOnButton: 'Проложить маршрут',
+                  icon: Assets.icons.arrowRight.svg(
+                      width: 19,
+                      height: 16
+                  ),
+                  onPressed: () {
+                    context.read<MapDataProvider>().setPlace(
+                        vm.placeFullInfo!.id, vm.placeFullInfo!.name);
+                    context.read<NavBarProvider>().setIndex(1);
+                  }
+              ),
+            )
+        )
+    );
   }
 }
 

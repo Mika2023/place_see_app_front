@@ -464,7 +464,7 @@ class _MapsScreenState extends State<MapsScreen> {
               ],
             ),
             if (vm!.route != null && !vm!.isEmptyRouteNormal) ...[
-              if (vm!.route!.path.isNotEmpty)
+              if (vm!.route!.path.isNotEmpty && (vm!.remainingRoute.isNotEmpty || vm!.polylines.isNotEmpty))
                 PolylineLayer(
                   polylines: [
                     Polyline(

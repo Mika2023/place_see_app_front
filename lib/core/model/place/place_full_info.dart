@@ -22,7 +22,7 @@ class PlaceFullInfo {
   @WorkingHoursConverter()
   final Map<DayEnum, List<Map<String, String>>>? workingHours;
 
-  final double visitCost;
+  final double? visitCost;
   final List<TagShort>? tags;
   final List<PhotoFullInfo> photos;
   final List<CategoryForPlace> categories;
@@ -34,7 +34,7 @@ class PlaceFullInfo {
     this.address,
     required this.locationDescription,
     this.workingHours,
-    required this.visitCost,
+    this.visitCost,
     this.tags,
     required this.photos,
     required this.categories,

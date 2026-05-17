@@ -37,6 +37,7 @@ import 'package:place_see_app/features/main_screens/places/service/places_servic
 import 'package:place_see_app/features/main_screens/places/view_model/places_view_model.dart';
 import 'package:place_see_app/features/main_screens/profile/service/profile_service.dart';
 import 'package:place_see_app/features/main_screens/profile/view_model/profile_view_model.dart';
+import 'package:place_see_app/features/main_screens/recommendations/view_model/recommendations_view_model.dart';
 import 'package:place_see_app/features/user_location/screen/user_location_screen.dart';
 import 'package:place_see_app/features/user_location/service/user_location_service.dart';
 import 'package:place_see_app/features/user_location/view_model/user_location_view_model.dart';
@@ -265,6 +266,14 @@ class MyApp extends StatelessWidget {
 
         ChangeNotifierProxyProvider2<PlacesService, FavoritePlacesViewModel, PlacesViewModel>(
           create: (_) => PlacesViewModel(),
+          update: (_, placesService, favPlacesVm, previous) {
+            previous!.update(placesService, favPlacesVm);
+            return previous;
+          },
+        ),
+
+        ChangeNotifierProxyProvider2<PlacesService, FavoritePlacesViewModel, RecommendationsViewModel>(
+          create: (_) => RecommendationsViewModel(),
           update: (_, placesService, favPlacesVm, previous) {
             previous!.update(placesService, favPlacesVm);
             return previous;

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:place_see_app/core/model/place/place_short_for_search.dart';
-import 'package:place_see_app/core/permission/permission_service.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
 import 'package:place_see_app/ui/theme/app_typography.dart';
 import 'package:place_see_app/ui/widget/app_button.dart';
@@ -31,26 +30,17 @@ class _AddPhotoDialogState extends State<AddPhotoDialog> {
   AppButtonState _appButtonState = AppButtonState.disabled;
 
   Future<void> _pickImage(ImageSource source) async {
-    final resultPermission = await PermissionService.checkGalleryPermission();
+    try {
+      final file = await _picker.pickImage(source: source);
 
-    switch(resultPermission) {
-      case PermissionStatus.granted:
-        final file = await _picker.pickImage(source: source);
-
-        if (file != null) {
-          setState(() {
-            image = file;
-
-            if (selectedPlace != null) _appButtonState = AppButtonState.enabled;
-          });
-        }
-        break;
-      case PermissionStatus.permanentlyDenied:
-        _showGoToSettingsDialog(context);
-        break;
-      default:
-        _showPermissionDeniedDialog(context);
-        break;
+      if (file != null) {
+        setState(() {
+          image = file;
+          if (selectedPlace != null) _appButtonState = AppButtonState.enabled;
+        });
+      }
+    } catch (e) {
+      _showGoToSettingsDialog(context);
     }
   }
 
@@ -93,47 +83,56 @@ class _AddPhotoDialogState extends State<AddPhotoDialog> {
   void _showGoToSettingsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        actionsAlignment: MainAxisAlignment.spaceBetween,
-        actionsOverflowDirection: VerticalDirection.down,
-        actionsOverflowButtonSpacing: 8,
-        title: Text(
-            "Доступ запрещён",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold
-          ),
-          textAlign: TextAlign.center,
-        ),
-        content: Text(
-          "Вы запретили доступ к галерее. Разрешите его в настройках приложения.",
-          style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                "Отмена",
-                style: AppTypography.smallButtonTextDark
-              )
-          ),
-          FilledButton(
-              onPressed: () {
-                openAppSettings();
-                Navigator.pop(ctx);
-              },
-              style: FilledButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  backgroundColor: AppColors.secondary,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+      builder: (ctx) =>
+          AlertDialog(
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actionsOverflowDirection: VerticalDirection.down,
+            actionsOverflowButtonSpacing: 8,
+            title: Text(
+              "Доступ запрещён",
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(
+                  fontWeight: FontWeight.bold
               ),
-              child: Text(
-                  "Настройки",
-                  style: AppTypography.smallButtonTextDark
-              )
+              textAlign: TextAlign.center,
+            ),
+            content: Text(
+              "Вы запретили доступ к галерее. Разрешите его в настройках приложения.",
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text(
+                      "Отмена",
+                      style: AppTypography.smallButtonTextDark
+                  )
+              ),
+              FilledButton(
+                  onPressed: () {
+                    openAppSettings();
+                    Navigator.pop(ctx);
+                  },
+                  style: FilledButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      backgroundColor: AppColors.secondary,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12)
+                  ),
+                  child: Text(
+                      "Настройки",
+                      style: AppTypography.smallButtonTextLight
+                  )
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 

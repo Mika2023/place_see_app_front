@@ -68,6 +68,17 @@ final List<AppNavItem> navItems = [
       ),
   ),
   AppNavItem(
+    label: 'Recommendations',
+    iconBuilder: (selected) => Assets.icons.fire.svg(
+      width: sizeOfItems+1.5,
+      height: sizeOfItems+1.5,
+      colorFilter: ColorFilter.mode(
+        selected? AppColors.secondary : AppColors.additionalTwo,
+        BlendMode.srcIn,
+      ),
+    ),
+  ),
+  AppNavItem(
     label: 'Map',
     iconBuilder: (selected) => Assets.icons.compass.svg(
       width: sizeOfItems + 1,

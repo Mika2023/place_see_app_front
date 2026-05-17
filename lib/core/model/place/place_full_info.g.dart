@@ -18,7 +18,7 @@ PlaceFullInfo _$PlaceFullInfoFromJson(Map<String, dynamic> json) =>
       workingHours: const WorkingHoursConverter().fromJson(
         json['workingHours'] as Map<String, dynamic>?,
       ),
-      visitCost: (json['visitCost'] as num).toDouble(),
+      visitCost: (json['visitCost'] as num?)?.toDouble(),
       tags: (json['tags'] as List<dynamic>?)
           ?.map((e) => TagShort.fromJson(e as Map<String, dynamic>))
           .toList(),

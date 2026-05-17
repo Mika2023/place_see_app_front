@@ -17,7 +17,7 @@ class PermissionService {
   }
 
   static Future<PermissionStatus> checkGalleryPermission() async {
-    final status = await Permission.photos.status;
+    final status = await Permission.photos.request();
 
     if (status.isGranted || status.isLimited) {
       return PermissionStatus.granted;

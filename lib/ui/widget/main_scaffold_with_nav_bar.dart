@@ -3,6 +3,7 @@ import 'package:place_see_app/features/main_screens/categories/screen/categories
 import 'package:place_see_app/features/main_screens/favorite_places/screen/favorite_places_screen.dart';
 import 'package:place_see_app/features/main_screens/maps/screen/maps_screen.dart';
 import 'package:place_see_app/features/main_screens/profile/screen/profile_screen.dart';
+import 'package:place_see_app/features/main_screens/recommendations/screen/recommendations_screen.dart';
 import 'package:place_see_app/ui/navigator/navigator_inner_tab_service.dart';
 import 'package:place_see_app/ui/widget/nav_bar/app_nav_bar.dart';
 import 'package:place_see_app/ui/widget/nav_bar/nav_bar_provider.dart';
@@ -66,14 +67,18 @@ class _MainScaffoldWithNavBarState extends State<MainScaffoldWithNavBar> {
               ),
               TabNavigator(
                 navigatorKey: _navigatorKeys[1],
-                rootScreen: const MapsScreen(),
+                rootScreen: const RecommendationsScreen(),
               ),
               TabNavigator(
                 navigatorKey: _navigatorKeys[2],
-                rootScreen: const FavoritePlacesScreen(),
+                rootScreen: const MapsScreen(),
               ),
               TabNavigator(
                 navigatorKey: _navigatorKeys[3],
+                rootScreen: const FavoritePlacesScreen(),
+              ),
+              TabNavigator(
+                navigatorKey: _navigatorKeys[4],
                 rootScreen: const ProfileScreen(),
               ),
             ],

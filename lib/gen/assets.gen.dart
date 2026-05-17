@@ -73,6 +73,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/filters.svg
   SvgGenImage get filters => const SvgGenImage('assets/icons/filters.svg');
 
+  /// File path: assets/icons/fire.svg
+  SvgGenImage get fire => const SvgGenImage('assets/icons/fire.svg');
+
   /// File path: assets/icons/folder.svg
   SvgGenImage get folder => const SvgGenImage('assets/icons/folder.svg');
 
@@ -163,6 +166,7 @@ class $AssetsIconsGen {
     discs,
     dotFilled,
     filters,
+    fire,
     folder,
     heartCracked,
     heartSelected,

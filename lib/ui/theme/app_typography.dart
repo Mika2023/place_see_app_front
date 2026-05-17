@@ -114,6 +114,13 @@ class AppTypography {
     color: AppColors.secondary,
   );
 
+  static const smallButtonTextLight = TextStyle(
+    fontFamily: 'NT Somic',
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+    color: AppColors.primary,
+  );
+
   static const subTextLight = TextStyle(
     fontFamily: 'NT Somic',
     fontSize: 16,

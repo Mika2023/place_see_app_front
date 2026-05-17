@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     routesVm.setRoute(route);
-    navigatorVm.setIndex(1);
+    navigatorVm.setIndex(2);
   }
 
   Widget _buildPhoto(String path) {

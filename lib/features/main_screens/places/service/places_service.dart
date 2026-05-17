@@ -46,4 +46,14 @@ class PlacesService {
       throw Exception('Не удалось поменять статус избранного у места!');
     }
   }
+
+  Future<List<PlaceCard>> loadPlacesRecommended() async {
+    final rawPlaces = await placesApi.getPlacesRecommended();
+
+    if (rawPlaces.isEmpty) return [];
+
+    return rawPlaces.map((rawPlace) {
+      return PlaceCard.fromJson(rawPlace);
+    }).toList();
+  }
 }

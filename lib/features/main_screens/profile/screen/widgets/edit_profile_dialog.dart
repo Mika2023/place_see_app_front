@@ -37,10 +37,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final resultPermission = await PermissionService.checkGalleryPermission();
+    try {
 
-    switch(resultPermission) {
-      case PermissionStatus.granted:
         final file = await _picker.pickImage(source: source);
 
         if (file != null) {
@@ -50,13 +48,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             _appButtonState = AppButtonState.enabled;
           });
         }
-        break;
-      case PermissionStatus.permanentlyDenied:
-        _showGoToSettingsDialog(context);
-        break;
-      default:
-        _showPermissionDeniedDialog(context);
-        break;
+    } catch (e) {
+      _showGoToSettingsDialog(context);
     }
   }
 
@@ -135,7 +128,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ),
               child: Text(
                   "Настройки",
-                  style: AppTypography.smallButtonTextDark
+                  style: AppTypography.smallButtonTextLight
               )
           ),
         ],

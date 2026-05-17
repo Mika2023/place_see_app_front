@@ -71,6 +71,7 @@ class MapsViewModel extends ChangeNotifier {
     isRouteCompleted = false;
     wasEdited = false;
     isFromProfile = true;
+    isNavigationMode = false;
     notifyListeners();
   }
 
@@ -138,6 +139,7 @@ class MapsViewModel extends ChangeNotifier {
       isRouteCompleted = false;
       wasEdited = false;
       isFromProfile = false;
+      isNavigationMode = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         notifyListeners();
       });

@@ -170,7 +170,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                 MaterialPageRoute(builder: (_) =>
                     PlaceScreen(id: place.id)))
         },
-          onFavTap: () => vm.toggleFavorite(index, fromSearch: vm.isSearchMode),
+          onFavTap: () => vm.toggleFavorite(index, fromSearch: vm.isSearchMode, fromFilter: vm.isFilterMode),
         );
       },
     );

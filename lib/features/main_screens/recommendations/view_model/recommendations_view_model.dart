@@ -8,7 +8,7 @@ import 'package:place_see_app/features/main_screens/favorite_places/view_model/f
 import 'package:place_see_app/features/main_screens/places/service/places_service.dart';
 import 'package:place_see_app/ui/enum/app_button_state.dart';
 
-class PlacesViewModel extends ChangeNotifier {
+class RecommendationsViewModel extends ChangeNotifier {
   PlacesService? _placesService;
   FavoritePlacesViewModel? _favoritePlacesViewModel;
   bool _isLoading = false;
@@ -77,7 +77,7 @@ class PlacesViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> loadPlaces(int catId) async {
+  Future<void> loadPlaces() async {
     try {
       _isFilterMode = false;
       _isLoading = true;
@@ -85,7 +85,7 @@ class PlacesViewModel extends ChangeNotifier {
       if (isSearchMode) _query = '';
       notifyListeners();
 
-      _places = (await _placesService?.loadPlaces(catId))!;
+      _places = (await _placesService?.loadPlacesRecommended())!;
     } catch (e) {
       error = e.toString();
 
@@ -161,7 +161,7 @@ class PlacesViewModel extends ChangeNotifier {
   void selectSuggestion(String suggestion, TextEditingController controller) {
     controller.text = suggestion;
     controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: suggestion.length),
+      TextPosition(offset: suggestion.length),
     );
     showSuggestions = false;
     searchPlaces(suggestion);
