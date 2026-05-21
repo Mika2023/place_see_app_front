@@ -272,7 +272,7 @@ class _PlaceScreenState extends State<PlaceScreen> {
                   onPressed: () {
                     context.read<MapDataProvider>().setPlace(
                         vm.placeFullInfo!.id, vm.placeFullInfo!.name);
-                    context.read<NavBarProvider>().setIndex(1);
+                    context.read<NavBarProvider>().setIndex(2);
                   }
               ),
             )
